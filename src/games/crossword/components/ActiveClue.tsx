@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback, useRef } from 'react';
 import { Box, IconButton, Typography } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
@@ -18,6 +18,17 @@ export const ActiveClue: React.FC<ActiveClueProps> = ({
     onPreviousClue,
     onNextClue,
 }) => {
+    const lastClickTime = useRef<number>(0);
+    const DEBOUNCE_TIME = 100; // milliseconds
+
+    const handleClick = useCallback((action: () => void) => {
+        const now = Date.now();
+        if (now - lastClickTime.current >= DEBOUNCE_TIME) {
+            action();
+            lastClickTime.current = now;
+        }
+    }, []);
+
     return (
         <Box
             sx={{
@@ -32,7 +43,11 @@ export const ActiveClue: React.FC<ActiveClueProps> = ({
                 boxShadow: 1,
             }}
         >
-            <IconButton onClick={onPreviousClue} size="small">
+            <IconButton 
+                onClick={() => handleClick(onPreviousClue)}
+                size="small"
+                sx={{ touchAction: 'none' }}
+            >
                 <ArrowBackIcon />
             </IconButton>
             
@@ -59,10 +74,18 @@ export const ActiveClue: React.FC<ActiveClueProps> = ({
                 </Typography>
             </Box>
 
-            <IconButton onClick={onDirectionToggle} size="small">
+            <IconButton 
+                onClick={() => handleClick(onDirectionToggle)}
+                size="small"
+                sx={{ touchAction: 'none' }}
+            >
                 <SwapHorizIcon />
             </IconButton>
-            <IconButton onClick={onNextClue} size="small">
+            <IconButton 
+                onClick={() => handleClick(onNextClue)}
+                size="small"
+                sx={{ touchAction: 'none' }}
+            >
                 <ArrowForwardIcon />
             </IconButton>
         </Box>

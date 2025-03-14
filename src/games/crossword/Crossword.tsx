@@ -365,32 +365,59 @@ export const Crossword: React.FC = () => {
         };
     };
 
+    const getClueIndex = useCallback((number: number, direction: Direction): number => {
+        const directionClues = gameState.clues.filter(c => c.direction === direction);
+        return directionClues.findIndex(c => c.number === number);
+    }, [gameState.clues]);
+
     const handlePreviousClue = useCallback(() => {
         if (!gameState.activeClue) return;
-        
-        const clues = gameState.clues.filter(c => c.direction === gameState.activeClue!.direction);
-        const currentIndex = clues.findIndex(c => c.number === gameState.activeClue!.number);
+
+        // Get all clues in the same order as they appear in the UI
+        const orderedClues = [
+            ...gameState.clues.filter(c => c.direction === 'across'),
+            ...gameState.clues.filter(c => c.direction === 'down')
+        ];
+
+        const currentIndex = orderedClues.findIndex(
+            c => c.number === gameState.activeClue!.number && 
+                 c.direction === gameState.activeClue!.direction
+        );
         
         if (currentIndex > 0) {
-            const prevClue = clues[currentIndex - 1];
+            const prevClue = orderedClues[currentIndex - 1];
             handleClueClick(prevClue.number, prevClue.direction);
-        } else if (gameState.activeClue.direction === 'down') {
-            // Switch to last across clue
-            const acrossClues = gameState.clues.filter(c => c.direction === 'across');
-            if (acrossClues.length > 0) {
-                const lastAcross = acrossClues[acrossClues.length - 1];
-                handleClueClick(lastAcross.number, 'across');
-            }
+        } else {
+            // Wrap to end
+            const lastClue = orderedClues[orderedClues.length - 1];
+            handleClueClick(lastClue.number, lastClue.direction);
         }
     }, [gameState.activeClue, gameState.clues, handleClueClick]);
 
     const handleNextClue = useCallback(() => {
+        console.log('handleNextClue');
         if (!gameState.activeClue) return;
-        const nextClue = getNextClue(gameState.activeClue.number, gameState.activeClue.direction);
-        if (nextClue) {
+
+        // Get all clues in the same order as they appear in the UI
+        const orderedClues = [
+            ...gameState.clues.filter(c => c.direction === 'across'),
+            ...gameState.clues.filter(c => c.direction === 'down')
+        ];
+
+        const currentIndex = orderedClues.findIndex(
+            c => c.number === gameState.activeClue!.number && 
+                 c.direction === gameState.activeClue!.direction
+        );
+        
+        if (currentIndex < orderedClues.length - 1) {
+            const nextClue = orderedClues[currentIndex + 1];
             handleClueClick(nextClue.number, nextClue.direction);
+        } else {
+            // Wrap to beginning
+            const firstClue = orderedClues[0];
+            handleClueClick(firstClue.number, firstClue.direction);
         }
-    }, [gameState.activeClue, getNextClue, handleClueClick]);
+    }, [gameState.activeClue, gameState.clues, handleClueClick]);
 
     const activeClue = gameState.activeClue 
         ? gameState.clues.find(c => 
