@@ -67,15 +67,19 @@ export const Birdle: React.FC = () => {
 
             const guess = currentGuess.letters.map(l => l.value).join('');
             if (guess === gameState.answer) {
+                const newLetters = currentGuess.letters.map(l => ({ ...l, state: 'correct' as LetterState }));
                 newGuesses[gameState.currentGuess] = {
                     ...currentGuess,
-                    letters: currentGuess.letters.map(l => ({ ...l, state: 'correct' as LetterState }))
+                    letters: newLetters,
+                    isComplete: true
                 };
+                
                 setGameState(prev => ({
                     ...prev,
                     guesses: newGuesses,
                     isComplete: true,
-                    hasWon: true
+                    hasWon: true,
+                    currentGuess: prev.currentGuess + 1
                 }));
 
                 // Wait a moment to show the completed board, then navigate to results
@@ -95,14 +99,30 @@ export const Birdle: React.FC = () => {
                 return;
             }
 
+            // First pass: Mark correct letters
             const newLetters = currentGuess.letters.map((letter, index) => {
                 if (letter.value === gameState.answer[index]) {
                     return { ...letter, state: 'correct' as LetterState };
                 }
-                if (gameState.answer.includes(letter.value)) {
-                    return { ...letter, state: 'present' as LetterState };
+                return { ...letter, state: 'empty' as LetterState };
+            });
+
+            // Count remaining letters in answer (excluding correct matches)
+            const remainingLetters: Record<string, number> = {};
+            gameState.answer.split('').forEach((letter, index) => {
+                if (letter !== currentGuess.letters[index].value) {
+                    remainingLetters[letter] = (remainingLetters[letter] || 0) + 1;
                 }
-                return { ...letter, state: 'absent' as LetterState };
+            });
+
+            // Second pass: Mark present letters
+            newLetters.forEach((letter, index) => {
+                if (letter.state !== 'correct' && remainingLetters[letter.value] > 0) {
+                    letter.state = 'present';
+                    remainingLetters[letter.value]--;
+                } else if (letter.state !== 'correct') {
+                    letter.state = 'absent';
+                }
             });
 
             newGuesses[gameState.currentGuess] = {
@@ -178,8 +198,9 @@ export const Birdle: React.FC = () => {
 
     useEffect(() => {
         const newLetterStates: Record<string, Letter['state']> = {};
-        gameState.guesses.forEach(guess => {
-            if (guess.isComplete) {
+        gameState.guesses.forEach((guess, rowIndex) => {
+            // Only process completed guesses that are not the current row
+            if (guess.isComplete && rowIndex < gameState.currentGuess) {
                 guess.letters.forEach((letter, index) => {
                     if (letter.value) {
                         const currentState = newLetterStates[letter.value];
@@ -193,7 +214,7 @@ export const Birdle: React.FC = () => {
             }
         });
         setLetterStates(newLetterStates);
-    }, [gameState.guesses]);
+    }, [gameState.guesses, gameState.currentGuess]);
 
     const handleHelp = () => {
         setShowHelp(true);
@@ -214,60 +235,99 @@ export const Birdle: React.FC = () => {
     return (
         <Box 
             sx={{
-                height: 'calc(100vh - 56px)', // 56px is mobile app bar height
-                '@media (min-width: 600px)': {
-                    height: 'calc(100vh - 64px)', // 64px is desktop app bar height
+                height: {
+                    xs: 'calc(100vh - 56px - 16px - 1px)',
+                    sm: 'calc(100vh - 64px - 32px - 1px)',
                 },
                 display: 'flex',
                 flexDirection: 'column',
-                overflow: 'hidden', // Prevent scrolling
+                px: { xs: 1, sm: 2 },
+                py: { xs: 1, sm: 2 },
+                overflow: 'hidden',
             }}
         >
+            {/* Game Container */}
             <Box sx={{
-                flex: 1,
-                display: 'flex',
-                flexDirection: 'column',
-                maxWidth: 'sm',
                 width: '100%',
+                height: '100%',
+                maxWidth: { xs: '100%', sm: 'sm' },
                 mx: 'auto',
-                px: { xs: 1, sm: 2 },
-                overflow: 'hidden', // Prevent scrolling
+                display: 'grid',
+                gridTemplateRows: { xs: '1fr auto', sm: '1fr' },
+                alignItems: 'center',
+                gap: 0,
             }}>
-                {/* Game Header */}
-                <Box sx={{ py: { xs: 1, sm: 1.5 } }}>
-                    <Typography variant="h5" component="h1" sx={{ fontWeight: 600 }}>
-                        Birdle
-                    </Typography>
-                    <Typography 
-                        variant="subtitle2" 
-                        color="text.secondary"
-                        sx={{ mt: 0.5 }}
-                    >
-                        Guess the bird species in 6 tries
-                    </Typography>
-                </Box>
-
-                {/* Game Board - will flex to fill available space */}
-                <Box sx={{ 
-                    flex: 1,
+                {/* Game Content */}
+                <Box sx={{
+                    width: '100%',
+                    height: '100%',
                     display: 'flex',
+                    flexDirection: 'column',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    minHeight: 0, // Important for flex child
-                    overflow: 'hidden', // Prevent scrolling
+                    overflow: 'hidden',
                 }}>
-                    <GameBoard
-                        guesses={gameState.guesses}
-                        currentGuess={gameState.currentGuess}
-                    />
+                    {/* Game Board */}
+                    <Box sx={{
+                        width: '100%',
+                        maxWidth: { xs: '95vw', sm: '420px' },
+                        aspectRatio: '5/6',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        overflow: 'hidden',
+                        pb: { xs: 1, sm: 2 },
+                    }}>
+                        <GameBoard 
+                            guesses={gameState.guesses}
+                            currentGuess={gameState.currentGuess}
+                            isWinningGuess={gameState.hasWon}
+                        />
+                    </Box>
+
+                    {/* Controls Section - Desktop */}
+                    <Box sx={{
+                        display: { xs: 'none', sm: 'flex' },
+                        width: '100%',
+                        maxWidth: '500px',
+                        mt: 2,
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                    }}>
+                        <Keyboard
+                            onKeyPress={handleKeyPress}
+                            letterStates={letterStates}
+                        />
+                    </Box>
                 </Box>
 
-                {/* Keyboard - fixed height at bottom */}
-                <Box sx={{ mt: 'auto' }}>
-                    <Keyboard
-                        onKeyPress={handleKeyPress}
-                        letterStates={letterStates}
-                    />
+                {/* Controls Section - Mobile */}
+                <Box sx={{
+                    display: { xs: 'flex', sm: 'none' },
+                    position: 'sticky',
+                    bottom: 0,
+                    left: 0,
+                    right: 0,
+                    width: '100%',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    overflow: 'hidden',
+                    bgcolor: (theme) => theme.palette.mode === 'light' 
+                        ? 'rgba(255, 255, 255, 0.9)'
+                        : 'rgba(18, 18, 18, 0.9)',
+                    backdropFilter: 'blur(8px)',
+                    borderTopLeftRadius: 2,
+                    borderTopRightRadius: 2,
+                    boxShadow: 1,
+                    px: { xs: 0.5, sm: 1 },
+                    py: { xs: 1, sm: 1.5 },
+                }}>
+                    <Box sx={{ width: '100%', maxWidth: '500px' }}>
+                        <Keyboard
+                            onKeyPress={handleKeyPress}
+                            letterStates={letterStates}
+                        />
+                    </Box>
                 </Box>
             </Box>
         </Box>

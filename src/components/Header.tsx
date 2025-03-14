@@ -158,7 +158,8 @@ export const Header: React.FC = () => {
                 sx={{ 
                     backgroundColor: theme.palette.primary.main,
                     borderBottom: 1,
-                    borderColor: 'divider'
+                    borderColor: 'divider',
+                    borderRadius: 0,
                 }}
             >
                 <Toolbar sx={{ gap: 2 }}>
@@ -229,6 +230,7 @@ export const Header: React.FC = () => {
                 PaperProps={{
                     sx: {
                         width: 250,
+                        borderRadius: 0,
                     }
                 }}
             >

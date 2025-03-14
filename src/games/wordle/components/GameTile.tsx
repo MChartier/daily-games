@@ -5,6 +5,7 @@ import { Letter } from '../types';
 interface GameTileProps {
     letter: Letter;
     isActive: boolean;
+    shouldAnimate?: boolean;
 }
 
 const bounce = keyframes`
@@ -63,8 +64,10 @@ const getBorderColor = (state: Letter['state'], isActive: boolean) => {
     return 'transparent';
 };
 
-export const GameTile: React.FC<GameTileProps> = ({ letter, isActive }) => {
+export const GameTile: React.FC<GameTileProps> = ({ letter, isActive, shouldAnimate = false }) => {
     const theme = useTheme();
+    // Force empty state for active tiles until they're submitted
+    const effectiveState = isActive ? 'empty' : letter.state;
 
     return (
         <Box
@@ -74,17 +77,17 @@ export const GameTile: React.FC<GameTileProps> = ({ letter, isActive }) => {
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                backgroundColor: getTileColor(letter.state, isActive),
+                backgroundColor: getTileColor(effectiveState, isActive),
                 border: 2,
-                borderColor: getBorderColor(letter.state, isActive),
+                borderColor: getBorderColor(effectiveState, isActive),
                 borderRadius: 1,
                 transition: 'all 0.2s ease-in-out',
-                animation: letter.state === 'correct' ? 
+                animation: shouldAnimate && effectiveState === 'correct' ? 
                     `${bounce} 1s ease-in-out` : undefined,
                 '&:hover': isActive ? {
                     borderColor: 'primary.dark',
                 } : undefined,
-                '&::after': letter.state === 'correct' ? {
+                '&::after': shouldAnimate && effectiveState === 'correct' ? {
                     content: '""',
                     position: 'absolute',
                     top: 0,
@@ -103,7 +106,7 @@ export const GameTile: React.FC<GameTileProps> = ({ letter, isActive }) => {
                 component="span"
                 sx={{
                     fontWeight: 700,
-                    color: letter.state === 'empty' ? 'text.primary' : 'white',
+                    color: effectiveState === 'empty' || isActive ? 'text.primary' : 'white',
                     textTransform: 'uppercase',
                     fontSize: 'clamp(1rem, 4vw, 1.75rem)',
                 }}

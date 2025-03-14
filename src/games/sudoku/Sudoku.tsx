@@ -174,17 +174,19 @@ export const Sudoku: React.FC = () => {
     }
 
     return (
-        <Box sx={{
-            height: 'calc(100vh - 56px)',
-            '@media (min-width: 600px)': {
-                height: 'calc(100vh - 64px)',
-            },
-            display: 'flex',
-            flexDirection: 'column',
-            px: 2,
-            py: { xs: 1, sm: 2 },
-            overflow: 'hidden',
-        }}>
+        <Box 
+            sx={{
+                height: {
+                    xs: 'calc(100vh - 56px - 16px - 1px)',
+                    sm: 'calc(100vh - 64px - 32px - 1px)',
+                },
+                display: 'flex',
+                flexDirection: 'column',
+                px: 2,
+                py: { xs: 1, sm: 2 },
+                overflow: 'hidden',
+            }}
+        >
             {/* Game Container */}
             <Box sx={{
                 width: '100%',
@@ -192,23 +194,25 @@ export const Sudoku: React.FC = () => {
                 maxWidth: 'sm',
                 mx: 'auto',
                 display: 'grid',
-                gridTemplateRows: '70% 30%', // Split screen into 70/30
-                gap: { xs: 1, sm: 2 },
+                gridTemplateRows: { xs: '1fr auto', sm: '1fr' },
+                alignItems: 'center',
+                gap: 0,
             }}>
                 {/* Board Section */}
                 <Box sx={{
                     width: '100%',
-                    height: '100%',
                     display: 'flex',
+                    flexDirection: 'column',
                     alignItems: 'center',
                     justifyContent: 'center',
                     overflow: 'hidden',
+                    pb: { xs: 1, sm: 2 },
                 }}>
                     <Box sx={{
                         position: 'relative',
                         width: {
-                            xs: 'min(100%, calc(100vh - 56px - 30vh - 16px))', // Mobile: account for smaller header and padding
-                            sm: 'min(100%, calc(100vh - 64px - 30vh - 32px))', // Desktop: account for larger header and padding
+                            xs: 'min(100%, calc(100vh - 56px - 30vh - 16px))',
+                            sm: 'min(100%, calc(100vh - 64px - 30vh - 32px))',
                         },
                         aspectRatio: '1/1',
                     }}>
@@ -218,16 +222,46 @@ export const Sudoku: React.FC = () => {
                             onCellClick={handleCellClick}
                         />
                     </Box>
+
+                    {/* Controls Section - Desktop */}
+                    <Box sx={{
+                        display: { xs: 'none', sm: 'flex' },
+                        width: '100%',
+                        mt: 2,
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                    }}>
+                        <NumberPad
+                            onNumberClick={handleNumberClick}
+                            onNoteClick={handleNoteClick}
+                            onErase={handleErase}
+                            onHint={handleHint}
+                            isNoteMode={isNoteMode}
+                            onToggleNoteMode={() => setIsNoteMode(prev => !prev)}
+                        />
+                    </Box>
                 </Box>
 
-                {/* Controls Section */}
+                {/* Controls Section - Mobile */}
                 <Box sx={{
+                    display: { xs: 'flex', sm: 'none' },
+                    position: 'sticky',
+                    bottom: 0,
+                    left: 0,
+                    right: 0,
                     width: '100%',
-                    height: '100%',
-                    display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
                     overflow: 'hidden',
+                    bgcolor: (theme) => theme.palette.mode === 'light' 
+                        ? 'rgba(255, 255, 255, 0.9)'
+                        : 'rgba(18, 18, 18, 0.9)',
+                    backdropFilter: 'blur(8px)',
+                    borderTopLeftRadius: 2,
+                    borderTopRightRadius: 2,
+                    boxShadow: 1,
+                    px: { xs: 1, sm: 2 },
+                    py: { xs: 1, sm: 1.5 },
                 }}>
                     <NumberPad
                         onNumberClick={handleNumberClick}
