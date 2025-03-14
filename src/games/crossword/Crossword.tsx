@@ -321,7 +321,6 @@ export const Crossword: React.FC = () => {
     }, [gameState.isComplete, gameState.endTime, gameState.startTime, navigate]);
 
     const getCellStyle = (row: number, col: number) => {
-        const cell = gameState.board[row][col];
         const isSelected = gameState.selectedCell?.row === row && gameState.selectedCell?.col === col;
         
         // Check if cell is part of active clue
@@ -491,7 +490,6 @@ export const Crossword: React.FC = () => {
                                         <Box
                                             key={`${i}-${j}`}
                                             onClick={() => {
-                                                const cell = gameState.board[i][j];
                                                 const currentDirection = gameState.activeClue?.direction || 'across';
                                                 
                                                 // If clicking the same cell, toggle direction

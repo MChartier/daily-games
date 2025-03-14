@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Typography, Grid, Paper, useTheme } from '@mui/material';
+import { Box, Typography, Grid, useTheme } from '@mui/material';
 import { Cell } from '../types';
 
 interface SudokuResultsProps {

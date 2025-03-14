@@ -33,9 +33,9 @@ const games = [
 ];
 
 export const Header: React.FC = () => {
+    const theme = useTheme();
     const navigate = useNavigate();
     const location = useLocation();
-    const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
     const [drawerOpen, setDrawerOpen] = useState(false);
 
@@ -45,7 +45,6 @@ export const Header: React.FC = () => {
     };
 
     const currentGame = getCurrentGame();
-    const isHome = location.pathname === '/';
 
     const handleGameClick = (gameId: string) => {
         navigate(`/games/${gameId}`);

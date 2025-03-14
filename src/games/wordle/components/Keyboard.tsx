@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Button, Grid, useTheme } from '@mui/material';
+import { Box, Button, Grid } from '@mui/material';
 import { KeyboardReturn as EnterIcon, Backspace as BackspaceIcon } from '@mui/icons-material';
 import { LetterState } from '../types';
 
@@ -30,8 +30,6 @@ const getKeyColor = (state: LetterState | undefined) => {
 };
 
 export const Keyboard: React.FC<KeyboardProps> = ({ onKeyPress, letterStates }) => {
-    const theme = useTheme();
-
     return (
         <Box sx={{ 
             display: 'flex', 

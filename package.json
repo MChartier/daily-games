@@ -46,5 +46,8 @@
       "last 1 safari version"
     ]
   },
-  "homepage": "https://mchartier.github.io/daily-games"
+  "homepage": "https://mchartier.github.io/daily-games",
+  "devDependencies": {
+    "@mui/types": "^7.2.21"
+  }
 }

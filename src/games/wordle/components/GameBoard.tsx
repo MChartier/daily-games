@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Grid, useTheme } from '@mui/material';
+import { Box, Grid } from '@mui/material';
 import { Guess } from '../types';
 import { GameTile } from './GameTile';
 
@@ -10,7 +10,6 @@ interface GameBoardProps {
 }
 
 export const GameBoard: React.FC<GameBoardProps> = ({ guesses, currentGuess, isWinningGuess = false }) => {
-    const theme = useTheme();
     const rows = 6;
     const cols = 5;
 

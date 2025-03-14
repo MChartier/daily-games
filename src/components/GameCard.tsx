@@ -1,6 +1,6 @@
 import React from 'react';
 import { Card, CardContent, CardActionArea, Typography, Box, Avatar, useTheme, useMediaQuery } from '@mui/material';
-import { CheckCircle, Extension, Grid4x4, FlutterDash, GridOn } from '@mui/icons-material';
+import { CheckCircle, Grid4x4, FlutterDash, GridOn } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import { GameInfo, GameType } from '../types/game';
 import { gameColors } from '../App';

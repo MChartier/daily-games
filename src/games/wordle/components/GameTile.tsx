@@ -65,7 +65,6 @@ const getBorderColor = (state: Letter['state'], isActive: boolean) => {
 };
 
 export const GameTile: React.FC<GameTileProps> = ({ letter, isActive, shouldAnimate = false }) => {
-    const theme = useTheme();
     // Force empty state for active tiles until they're submitted
     const effectiveState = isActive ? 'empty' : letter.state;
 

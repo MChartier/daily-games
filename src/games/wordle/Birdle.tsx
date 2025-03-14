@@ -194,7 +194,7 @@ export const Birdle: React.FC = () => {
 
         window.addEventListener('keydown', handleKeyDown);
         return () => window.removeEventListener('keydown', handleKeyDown);
-    }, [gameState]);
+    }, [handleKeyPress]);
 
     useEffect(() => {
         const newLetterStates: Record<string, Letter['state']> = {};

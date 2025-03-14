@@ -7,6 +7,7 @@ import { GameState, Cell, CellState } from './types';
 import { Grid4x4 } from '@mui/icons-material';
 import { GameStartScreen } from '../../components/GameStartScreen';
 import { gameColors } from '../../App';
+import { GridOn } from '@mui/icons-material';
 
 // Sample puzzle (0 represents empty cells)
 const SAMPLE_PUZZLE = [
@@ -57,6 +58,8 @@ export const Sudoku: React.FC = () => {
     const [isNoteMode, setIsNoteMode] = useState(false);
     const [hintsUsed, setHintsUsed] = useState(0);
     const [errors, setErrors] = useState(0);
+    const [selectedCell, setSelectedCell] = useState<[number, number] | null>(null);
+    const [board, setBoard] = useState<number[][]>(SAMPLE_PUZZLE);
 
     const handleCellClick = (row: number, col: number) => {
         setGameState(prev => ({
