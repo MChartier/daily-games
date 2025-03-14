@@ -1,14 +1,16 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { Box, Typography, Paper, Grid, useMediaQuery } from '@mui/material';
+import { Box, Typography, Paper, Grid, useMediaQuery, IconButton } from '@mui/material';
 import { CrosswordCell, CrosswordClue, GameState, Direction } from './types';
 import { useNavigate } from 'react-router-dom';
 import { useTheme } from '@mui/material/styles';
 import { alpha } from '@mui/material/styles';
-import { Extension } from '@mui/icons-material';
+import { Extension, HelpOutline } from '@mui/icons-material';
 import { ActiveClue } from './components/ActiveClue';
 import { GameStartScreen } from '../../components/GameStartScreen';
 import { gameColors } from '../../App';
 import { Keyboard } from '../wordle/components/Keyboard';
+import { CrosswordHowToPlay } from './components/CrosswordHowToPlay';
+import { useHelp } from '../../contexts/HelpContext';
 
 // Placeholder puzzle data
 const INITIAL_BOARD: CrosswordCell[][] = [
@@ -107,6 +109,7 @@ export const Crossword: React.FC = () => {
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
     const [gameStarted, setGameStarted] = useState(false);
+    const { showHelp, setShowHelp } = useHelp();
     const [gameState, setGameState] = useState<GameState>({
         board: INITIAL_BOARD,
         clues: INITIAL_CLUES,
@@ -428,13 +431,15 @@ export const Crossword: React.FC = () => {
 
     if (!gameStarted) {
         return (
-            <GameStartScreen
-                title="Crossword"
-                description="Challenge your vocabulary with our daily crossword puzzle. Each clue leads to a word that fits perfectly in the grid."
-                icon={<Extension />}
-                color={gameColors.crossword}
-                onStart={() => setGameStarted(true)}
-            />
+            <Box sx={{ height: 'calc(100vh - 57px)' }}>
+                <GameStartScreen
+                    title="Crossword"
+                    icon={<Extension />}
+                    color={gameColors.crossword}
+                    onStart={() => setGameStarted(true)}
+                    gameType="crossword"
+                />
+            </Box>
         );
     }
 
@@ -447,8 +452,55 @@ export const Crossword: React.FC = () => {
                 px: { xs: 1, sm: 2 },
                 py: { xs: 0.5, sm: 2 },
                 overflow: 'hidden',
+                position: 'relative',
             }}
         >
+            {/* How to Play Modal */}
+            <CrosswordHowToPlay
+                open={showHelp}
+                onClose={() => setShowHelp(false)}
+            />
+
+            {/* Desktop Help Button */}
+            {!isMobile && (
+                <IconButton
+                    onClick={() => setShowHelp(true)}
+                    size="large"
+                    sx={{ 
+                        position: 'absolute',
+                        top: 16,
+                        right: 16,
+                        color: 'text.primary',
+                        bgcolor: 'background.paper',
+                        boxShadow: 1,
+                        zIndex: 1,
+                        '&:hover': {
+                            bgcolor: 'background.paper',
+                            opacity: 0.9
+                        }
+                    }}
+                >
+                    <HelpOutline />
+                </IconButton>
+            )}
+
+            {/* Mobile Help Button in Header */}
+            {isMobile && (
+                <IconButton
+                    edge="end"
+                    sx={{
+                        position: 'fixed',
+                        top: 8,
+                        right: 16,
+                        color: 'white',
+                        zIndex: 1100,
+                    }}
+                    onClick={() => setShowHelp(true)}
+                >
+                    <HelpOutline />
+                </IconButton>
+            )}
+
             {/* Main Content Container */}
             <Box sx={{
                 flex: 1,
@@ -458,7 +510,6 @@ export const Crossword: React.FC = () => {
                 flexDirection: 'column',
                 overflow: 'hidden',
                 mx: 'auto',
-
             }}>
                 {/* Scrollable Game Content */}
                 <Box sx={{

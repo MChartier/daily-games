@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Typography, useTheme } from '@mui/material';
+import { Box, Typography, useTheme, IconButton, useMediaQuery } from '@mui/material';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { GameBoard } from './components/GameBoard';
 import { Keyboard } from './components/Keyboard';
 import { GameState, Guess, Letter, LetterState } from './types';
-import { FlutterDash } from '@mui/icons-material';
+import { FlutterDash, HelpOutline } from '@mui/icons-material';
 import { GameStartScreen } from '../../components/GameStartScreen';
 import { gameColors } from '../../App';
+import { WordleHowToPlay } from './components/WordleHowToPlay';
+import { useHelp } from '../../contexts/HelpContext';
 
 // Hardcoded list of 5-letter bird names
 const BIRD_WORDS = [
@@ -33,10 +35,11 @@ export const Birdle: React.FC = () => {
     const theme = useTheme();
     const navigate = useNavigate();
     const location = useLocation();
+    const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
     const [gameStarted, setGameStarted] = useState(false);
+    const { showHelp, setShowHelp } = useHelp();
     const [gameState, setGameState] = useState<GameState>(createEmptyGame());
     const [letterStates, setLetterStates] = useState<Record<string, Letter['state']>>({});
-    const [showHelp, setShowHelp] = useState(false);
 
     const handleKeyPress = (key: string) => {
         if (gameState.isComplete) return;
@@ -216,19 +219,17 @@ export const Birdle: React.FC = () => {
         setLetterStates(newLetterStates);
     }, [gameState.guesses, gameState.currentGuess]);
 
-    const handleHelp = () => {
-        setShowHelp(true);
-    };
-
     if (!gameStarted) {
         return (
-            <GameStartScreen
-                title="Birdle"
-                description="Guess the bird species in 6 tries. Each guess must be a valid 5-letter bird name."
-                icon={<FlutterDash sx={{ transform: 'scaleX(-1)' }} />}
-                color={gameColors.birdle}
-                onStart={() => setGameStarted(true)}
-            />
+            <Box sx={{ height: 'calc(100vh - 57px)' }}>
+                <GameStartScreen
+                    title="Birdle"
+                    icon={<FlutterDash sx={{ transform: 'scaleX(-1)' }} />}
+                    color={gameColors.birdle}
+                    onStart={() => setGameStarted(true)}
+                    gameType="birdle"
+                />
+            </Box>
         );
     }
 
@@ -241,8 +242,55 @@ export const Birdle: React.FC = () => {
                 px: { xs: 1, sm: 2 },
                 py: { xs: 1, sm: 2 },
                 overflow: 'hidden',
+                position: 'relative',
             }}
         >
+            {/* How to Play Modal */}
+            <WordleHowToPlay
+                open={showHelp}
+                onClose={() => setShowHelp(false)}
+            />
+
+            {/* Desktop Help Button */}
+            {!isMobile && (
+                <IconButton
+                    onClick={() => setShowHelp(true)}
+                    size="large"
+                    sx={{ 
+                        position: 'absolute',
+                        top: 16,
+                        right: 16,
+                        color: 'text.primary',
+                        bgcolor: 'background.paper',
+                        boxShadow: 1,
+                        zIndex: 1,
+                        '&:hover': {
+                            bgcolor: 'background.paper',
+                            opacity: 0.9
+                        }
+                    }}
+                >
+                    <HelpOutline />
+                </IconButton>
+            )}
+
+            {/* Mobile Help Button in Header */}
+            {isMobile && (
+                <IconButton
+                    edge="end"
+                    sx={{
+                        position: 'fixed',
+                        top: 8,
+                        right: 16,
+                        color: 'white',
+                        zIndex: 1100,
+                    }}
+                    onClick={() => setShowHelp(true)}
+                >
+                    <HelpOutline />
+                </IconButton>
+            )}
+
             {/* Game Container */}
             <Box sx={{
                 width: '100%',

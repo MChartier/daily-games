@@ -1,51 +1,61 @@
 import React from 'react';
-import { Box, Typography, Button, useTheme } from '@mui/material';
-import { SvgIconComponent } from '@mui/icons-material';
+import { Box, Button, Typography, useTheme } from '@mui/material';
+import { HelpOutline, PlayArrow } from '@mui/icons-material';
+import { useHelp } from '../contexts/HelpContext';
+import { WordleHowToPlay } from '../games/wordle/components/WordleHowToPlay';
+import { CrosswordHowToPlay } from '../games/crossword/components/CrosswordHowToPlay';
+import { SudokuHowToPlay } from '../games/sudoku/components/SudokuHowToPlay';
 import { alpha } from '@mui/material/styles';
 
 interface GameStartScreenProps {
-    title: string;
-    description: string;
-    icon: React.ReactElement<SvgIconComponent>;
-    color: string;
     onStart: () => void;
+    title: string;
+    icon: React.ReactNode;
+    color: string;
+    gameType: 'birdle' | 'crossword' | 'sudoku';
 }
 
 export const GameStartScreen: React.FC<GameStartScreenProps> = ({
+    onStart,
     title,
-    description,
     icon,
     color,
-    onStart
+    gameType,
 }) => {
-    const theme = useTheme();
+    const { showHelp, setShowHelp } = useHelp();
+
+    const HelpModal = {
+        birdle: WordleHowToPlay,
+        crossword: CrosswordHowToPlay,
+        sudoku: SudokuHowToPlay
+    }[gameType];
 
     return (
         <Box
             sx={{
-                height: 'calc(100vh - 56px)',
-                '@media (min-width: 600px)': {
-                    height: 'calc(100vh - 64px)',
-                },
+                height: '100%',
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
                 justifyContent: 'center',
-                backgroundColor: alpha(color, 0.1),
-                px: 2,
+                gap: 3,
+                p: 2,
+                background: `linear-gradient(180deg, ${alpha(color, 0.08)} 0%, ${alpha(color, 0.12)} 100%)`,
             }}
         >
+            <HelpModal
+                open={showHelp}
+                onClose={() => setShowHelp(false)}
+            />
+
             <Box
                 sx={{
                     display: 'flex',
                     flexDirection: 'column',
                     alignItems: 'center',
-                    maxWidth: 'sm',
-                    width: '100%',
-                    textAlign: 'center',
+                    gap: 3,
                 }}
             >
-                {/* Icon */}
                 <Box
                     sx={{
                         width: 80,
@@ -55,58 +65,54 @@ export const GameStartScreen: React.FC<GameStartScreenProps> = ({
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        mb: 3,
+                        color: 'white',
+                        boxShadow: 2,
                         '& .MuiSvgIcon-root': {
                             fontSize: 48,
-                            color: 'white'
-                        }
+                        },
                     }}
                 >
                     {icon}
                 </Box>
-
-                {/* Title */}
-                <Typography
-                    variant="h3"
-                    component="h1"
-                    sx={{
-                        fontWeight: 700,
-                        color: theme.palette.text.primary,
-                        mb: 2
-                    }}
-                >
+                <Typography variant="h4" component="h1" sx={{ fontWeight: 600 }}>
                     {title}
                 </Typography>
+            </Box>
 
-                {/* Description */}
-                <Typography
-                    variant="h6"
-                    sx={{
-                        color: theme.palette.text.secondary,
-                        mb: 4,
-                        maxWidth: 450
-                    }}
-                >
-                    {description}
-                </Typography>
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
 
-                {/* Play Button */}
                 <Button
                     variant="contained"
                     size="large"
                     onClick={onStart}
+                    startIcon={<PlayArrow />}
                     sx={{
                         backgroundColor: color,
+                        boxShadow: 2,
                         '&:hover': {
-                            backgroundColor: alpha(color, 0.9)
+                            backgroundColor: color,
+                            opacity: 0.9,
                         },
-                        px: 6,
-                        py: 1.5,
-                        borderRadius: 3,
-                        fontSize: '1.25rem'
                     }}
                 >
-                    Play Now
+                    Start Game
+                </Button>
+                <Button
+                    variant="outlined"
+                    size="large"
+                    onClick={() => setShowHelp(true)}
+                    startIcon={<HelpOutline />}
+                    sx={{
+                        borderColor: color,
+                        color: color,
+                        backgroundColor: 'white',
+                        '&:hover': {
+                            borderColor: color,
+                            backgroundColor: `${color}10`,
+                        },
+                    }}
+                >
+                    How to Play
                 </Button>
             </Box>
         </Box>

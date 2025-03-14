@@ -1,13 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Typography, Container, useTheme, Button } from '@mui/material';
+import { Box, Typography, Container, useTheme, Button, IconButton } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { GameBoard } from './components/GameBoard';
 import { NumberPad } from './components/NumberPad';
 import { GameState, Cell, CellState } from './types';
-import { Grid4x4 } from '@mui/icons-material';
+import { Grid4x4, HelpOutline } from '@mui/icons-material';
 import { GameStartScreen } from '../../components/GameStartScreen';
 import { gameColors } from '../../App';
+import { SudokuHowToPlay } from './components/SudokuHowToPlay';
 import { GridOn } from '@mui/icons-material';
+import { useHelp } from '../../contexts/HelpContext';
+import { useMediaQuery } from '@mui/material';
 
 // Sample puzzle (0 represents empty cells)
 const SAMPLE_PUZZLE = [
@@ -53,7 +56,9 @@ const createEmptyGame = (): GameState => ({
 export const Sudoku: React.FC = () => {
     const theme = useTheme();
     const navigate = useNavigate();
+    const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
     const [gameStarted, setGameStarted] = useState(false);
+    const { showHelp, setShowHelp } = useHelp();
     const [gameState, setGameState] = useState<GameState>(createEmptyGame());
     const [isNoteMode, setIsNoteMode] = useState(false);
     const [hintsUsed, setHintsUsed] = useState(0);
@@ -166,13 +171,15 @@ export const Sudoku: React.FC = () => {
 
     if (!gameStarted) {
         return (
-            <GameStartScreen
-                title="Sudoku"
-                description="Fill the 9×9 grid with numbers 1-9, ensuring each number appears exactly once in every row, column, and 3×3 box."
-                icon={<Grid4x4 />}
-                color={gameColors.sudoku}
-                onStart={() => setGameStarted(true)}
-            />
+            <Box sx={{ height: 'calc(100vh - 57px)' }}>
+                <GameStartScreen
+                    title="Sudoku"
+                    icon={<Grid4x4 />}
+                    color={gameColors.sudoku}
+                    onStart={() => setGameStarted(true)}
+                    gameType="sudoku"
+                />
+            </Box>
         );
     }
 
@@ -185,8 +192,55 @@ export const Sudoku: React.FC = () => {
                 px: 2,
                 py: { xs: 1, sm: 2 },
                 overflow: 'hidden',
+                position: 'relative',
             }}
         >
+            {/* How to Play Modal */}
+            <SudokuHowToPlay
+                open={showHelp}
+                onClose={() => setShowHelp(false)}
+            />
+
+            {/* Desktop Help Button */}
+            {!isMobile && (
+                <IconButton
+                    onClick={() => setShowHelp(true)}
+                    size="large"
+                    sx={{ 
+                        position: 'absolute',
+                        top: 16,
+                        right: 16,
+                        color: 'text.primary',
+                        bgcolor: 'background.paper',
+                        boxShadow: 1,
+                        zIndex: 1,
+                        '&:hover': {
+                            bgcolor: 'background.paper',
+                            opacity: 0.9
+                        }
+                    }}
+                >
+                    <HelpOutline />
+                </IconButton>
+            )}
+
+            {/* Mobile Help Button in Header */}
+            {isMobile && (
+                <IconButton
+                    edge="end"
+                    sx={{
+                        position: 'fixed',
+                        top: 8,
+                        right: 16,
+                        color: 'white',
+                        zIndex: 1100,
+                    }}
+                    onClick={() => setShowHelp(true)}
+                >
+                    <HelpOutline />
+                </IconButton>
+            )}
+
             {/* Game Container */}
             <Box sx={{
                 width: '100%',

@@ -22,9 +22,11 @@ import {
     Extension,
     Grid4x4,
     FlutterDash,
-    Close as CloseIcon
+    Close as CloseIcon,
+    HelpOutline
 } from '@mui/icons-material';
 import { gameColors } from '../App';
+import { useHelp } from '../contexts/HelpContext';
 
 const games = [
     { id: 'crossword', name: 'Crossword', icon: <Extension /> },
@@ -38,6 +40,7 @@ export const Header: React.FC = () => {
     const location = useLocation();
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
     const [drawerOpen, setDrawerOpen] = useState(false);
+    const { setShowHelp } = useHelp();
 
     const getCurrentGame = () => {
         const path = location.pathname.split('/')[2]; // games/[gameId]
@@ -179,7 +182,8 @@ export const Header: React.FC = () => {
                                     alignItems: 'center',
                                     gap: 1,
                                     color: 'white',
-                                    cursor: currentGame ? 'default' : 'pointer'
+                                    cursor: currentGame ? 'default' : 'pointer',
+                                    flex: 1,
                                 }}
                                 onClick={() => !currentGame && navigate('/')}
                             >

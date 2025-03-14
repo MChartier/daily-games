@@ -1,0 +1,85 @@
+import React from 'react';
+import { Box, Typography, List, ListItem, ListItemIcon, ListItemText } from '@mui/material';
+import { HowToPlayModal } from '../../../components/HowToPlayModal';
+import SwapHorizIcon from '@mui/icons-material/SwapHoriz';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import TouchAppIcon from '@mui/icons-material/TouchApp';
+
+interface CrosswordHowToPlayProps {
+    open: boolean;
+    onClose: () => void;
+}
+
+export const CrosswordHowToPlay: React.FC<CrosswordHowToPlayProps> = ({ open, onClose }) => {
+    return (
+        <HowToPlayModal
+            open={open}
+            onClose={onClose}
+            title="How to Play Crossword"
+        >
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+                <Typography>
+                    Fill in the crossword puzzle by solving the clues. The puzzle works just like a regular crossword, but with a modern touch interface.
+                </Typography>
+
+                <Box>
+                    <Typography variant="subtitle1" fontWeight="bold" gutterBottom>
+                        How to Navigate:
+                    </Typography>
+                    <List>
+                        <ListItem>
+                            <ListItemIcon>
+                                <TouchAppIcon />
+                            </ListItemIcon>
+                            <ListItemText 
+                                primary="Tap any square to start entering letters"
+                                secondary="The selected word will be highlighted"
+                            />
+                        </ListItem>
+                        <ListItem>
+                            <ListItemIcon>
+                                <SwapHorizIcon />
+                            </ListItemIcon>
+                            <ListItemText 
+                                primary="Tap the swap button to switch between across and down"
+                                secondary="Changes direction for the current word"
+                            />
+                        </ListItem>
+                        <ListItem>
+                            <ListItemIcon sx={{ display: 'flex', gap: 1 }}>
+                                <ArrowBackIcon />
+                                <ArrowForwardIcon />
+                            </ListItemIcon>
+                            <ListItemText 
+                                primary="Use the arrows to navigate between clues"
+                                secondary="Moves to the previous or next clue in sequence"
+                            />
+                        </ListItem>
+                    </List>
+                </Box>
+
+                <Box>
+                    <Typography variant="subtitle1" fontWeight="bold" gutterBottom>
+                        Tips:
+                    </Typography>
+                    <List sx={{ listStyleType: 'disc', pl: 2 }}>
+                        <ListItem sx={{ display: 'list-item' }}>
+                            <ListItemText primary="Letters are automatically capitalized" />
+                        </ListItem>
+                        <ListItem sx={{ display: 'list-item' }}>
+                            <ListItemText primary="The active clue is always visible at the top" />
+                        </ListItem>
+                        <ListItem sx={{ display: 'list-item' }}>
+                            <ListItemText primary="Completed words will be highlighted in green" />
+                        </ListItem>
+                    </List>
+                </Box>
+
+                <Typography>
+                    A new puzzle will be available each day. Good luck!
+                </Typography>
+            </Box>
+        </HowToPlayModal>
+    );
+}; 
