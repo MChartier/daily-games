@@ -417,8 +417,8 @@ export const Crossword: React.FC = () => {
                 display: 'flex',
                 flexDirection: 'column',
                 height: 'calc(100vh - 57px)',
-                px: 2,
-                py: { xs: 1, sm: 2 },
+                px: { xs: 1, sm: 2 },
+                py: { xs: 0.5, sm: 2 },
                 overflow: 'hidden',
             }}
         >
@@ -431,6 +431,7 @@ export const Crossword: React.FC = () => {
                 flexDirection: 'column',
                 overflow: 'hidden',
                 mx: 'auto',
+
             }}>
                 {/* Scrollable Game Content */}
                 <Box sx={{
@@ -453,7 +454,7 @@ export const Crossword: React.FC = () => {
                     }}>
                         {/* Game Board Container */}
                         <Box sx={{
-                            width: { xs: '100%', sm: '800px' },
+                            width: { xs: '100%', sm: '600px' },
                             display: 'flex',
                             flexDirection: 'column',
                             alignItems: 'center',
@@ -463,7 +464,7 @@ export const Crossword: React.FC = () => {
                             <Box
                                 sx={{
                                     width: '100%',
-                                    maxWidth: { xs: '100%', sm: '800px' },
+                                    maxWidth: { xs: '100%', sm: '600px' },
                                     aspectRatio: '1/1',
                                     backgroundColor: alpha(theme.palette.text.primary, 0.23),
                                     border: `2px solid ${theme.palette.text.primary}`,
@@ -566,10 +567,16 @@ export const Crossword: React.FC = () => {
                                     alignItems: 'center',
                                     justifyContent: 'center',
                                 }}>
-                                    <Keyboard
-                                        onKeyPress={handleKeyPress}
-                                        letterStates={{}}
-                                    />
+                                    <Box sx={{ 
+                                        width: '100%',
+                                        maxWidth: { xs: '100%', sm: '800px' }
+                                    }}>
+                                        <Keyboard
+                                            onKeyPress={handleKeyPress}
+                                            letterStates={{}}
+                                            variant="crossword"
+                                        />
+                                    </Box>
                                 </Box>
                             )}
                         </Box>
@@ -681,21 +688,18 @@ export const Crossword: React.FC = () => {
                         width: '100%',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        bgcolor: (theme) => theme.palette.mode === 'light' 
-                            ? 'rgba(255, 255, 255, 0.9)'
-                            : 'rgba(18, 18, 18, 0.9)',
-                        backdropFilter: 'blur(8px)',
-                        borderTopLeftRadius: 2,
-                        borderTopRightRadius: 2,
-                        boxShadow: 1,
-                        px: { xs: 1, sm: 2 },
-                        py: { xs: 1, sm: 1.5 },
-                        mt: 2,
+                        px: { xs: 0.5, sm: 2 },
+                        py: { xs: 0.5, sm: 1.5 },
+                        mt: 1,
                     }}>
-                        <Box sx={{ width: '100%', maxWidth: '500px' }}>
+                        <Box sx={{ 
+                            width: '100%',
+                            maxWidth: { xs: '100%', sm: '800px' }
+                        }}>
                             <Keyboard
                                 onKeyPress={handleKeyPress}
                                 letterStates={{}}
+                                variant="crossword"
                             />
                         </Box>
                     </Box>

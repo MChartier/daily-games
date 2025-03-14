@@ -198,19 +198,19 @@ export const Sudoku: React.FC = () => {
             }}>
                 {/* Board Section */}
                 <Box sx={{
-                    flex: 1,
+                    flex: '1 1 auto',
+                    minHeight: 0,
                     width: '100%',
                     display: 'flex',
                     flexDirection: 'column',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    overflow: 'auto',
                 }}>
                     <Box sx={{
                         position: 'relative',
                         width: {
-                            xs: 'min(100%, calc(100vh - 56px - 30vh - 16px))',
-                            sm: 'min(100%, calc(100vh - 64px - 30vh - 32px))',
+                            xs: 'min(100%, calc(100vh - 56px - 250px))',
+                            sm: 'min(100%, calc(100vh - 64px - 280px))',
                         },
                         aspectRatio: '1/1',
                     }}>
@@ -225,16 +225,11 @@ export const Sudoku: React.FC = () => {
                 {/* Controls Section */}
                 <Box sx={{
                     width: '100%',
+                    flex: '0 0 auto',
                     display: 'flex',
                     flexDirection: 'column',
                     alignItems: 'center',
-                    bgcolor: (theme) => theme.palette.mode === 'light' 
-                        ? 'rgba(255, 255, 255, 0.9)'
-                        : 'rgba(18, 18, 18, 0.9)',
-                    backdropFilter: 'blur(8px)',
-                    borderTopLeftRadius: 2,
-                    borderTopRightRadius: 2,
-                    boxShadow: 1,
+                    mt: 'auto',
                     px: { xs: 1, sm: 2 },
                     py: { xs: 1, sm: 1.5 },
                 }}>

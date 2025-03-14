@@ -31,31 +31,31 @@ export const NumberPad: React.FC<NumberPadProps> = ({
     const buttonStyle = {
         width: '100%',
         height: '100%',
-        bgcolor: 'action.hover',
         borderRadius: 1,
+        bgcolor: 'background.paper',
+        border: 1,
+        borderColor: 'divider',
         '&:hover': {
-            bgcolor: 'action.selected',
+            bgcolor: 'action.hover',
         },
     };
 
     return (
         <Grid 
             container 
-            rowSpacing={1.5} 
-            columnSpacing={1.5} 
+            rowSpacing={1} 
+            columnSpacing={1} 
             sx={{ 
                 width: '100%',
-                height: '100%',
-                maxWidth: '320px',
-                maxHeight: '240px',
+                maxWidth: { xs: '100%', sm: '800px' },
                 mx: 'auto',
                 '& .MuiGrid-item': {
-                    height: 'calc((100% - 32px) / 4)', // (container height - total gap) / number of rows
                     display: 'flex',
                 },
                 '& .MuiIconButton-root': {
                     flex: 1,
                     fontSize: { xs: '1.25rem', sm: '1.5rem' },
+                    height: { xs: '40px', sm: '48px' },
                 },
                 '& .MuiSvgIcon-root': {
                     fontSize: { xs: '1.25rem', sm: '1.5rem' },

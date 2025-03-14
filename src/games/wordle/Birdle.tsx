@@ -286,20 +286,17 @@ export const Birdle: React.FC = () => {
                     display: 'flex',
                     flexDirection: 'column',
                     alignItems: 'center',
-                    bgcolor: (theme) => theme.palette.mode === 'light' 
-                        ? 'rgba(255, 255, 255, 0.9)'
-                        : 'rgba(18, 18, 18, 0.9)',
-                    backdropFilter: 'blur(8px)',
-                    borderTopLeftRadius: 2,
-                    borderTopRightRadius: 2,
-                    boxShadow: 1,
                     px: { xs: 0.5, sm: 1 },
                     py: { xs: 1, sm: 1.5 },
                 }}>
-                    <Box sx={{ width: '100%', maxWidth: '500px' }}>
+                    <Box sx={{ 
+                        width: '100%',
+                        maxWidth: { xs: '100%', sm: '800px' }
+                    }}>
                         <Keyboard
                             onKeyPress={handleKeyPress}
                             letterStates={letterStates}
+                            variant="wordle"
                         />
                     </Box>
                 </Box>
