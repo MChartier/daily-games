@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { Box, Typography, Paper, Grid, useMediaQuery } from '@mui/material';
 import { CrosswordCell, CrosswordClue, GameState, Direction } from './types';
 import { useNavigate } from 'react-router-dom';
@@ -8,6 +8,7 @@ import { Extension } from '@mui/icons-material';
 import { ActiveClue } from './components/ActiveClue';
 import { GameStartScreen } from '../../components/GameStartScreen';
 import { gameColors } from '../../App';
+import { Keyboard } from '../wordle/components/Keyboard';
 
 // Placeholder puzzle data
 const INITIAL_BOARD: CrosswordCell[][] = [
@@ -199,19 +200,18 @@ export const Crossword: React.FC = () => {
         }
     }, [gameState.activeClue?.direction, findClueFromCell]);
 
-    const handleKeyPress = useCallback((event: KeyboardEvent) => {
+    const handleKeyPress = useCallback((key: string) => {
         if (!gameState.selectedCell) return;
 
         const { row, col } = gameState.selectedCell;
         const direction = gameState.activeClue?.direction || 'across';
 
-        if (event.key === ' ') {
-            event.preventDefault();
+        if (key === ' ') {
             toggleDirection(row, col);
             return;
         }
 
-        if (event.key === 'Backspace' || event.key === 'Delete') {
+        if (key === 'BACKSPACE') {
             setGameState(prev => ({
                 ...prev,
                 board: prev.board.map((r, i) =>
@@ -222,8 +222,8 @@ export const Crossword: React.FC = () => {
                         : r
                 ),
             }));
-        } else if (/^[a-zA-Z]$/.test(event.key)) {
-            const newLetter = event.key.toUpperCase();
+        } else if (/^[A-Z]$/.test(key)) {
+            const newLetter = key.toUpperCase();
             setGameState(prev => {
                 const newBoard = prev.board.map((r, i) =>
                     i === row
@@ -263,13 +263,12 @@ export const Crossword: React.FC = () => {
                     isComplete,
                 };
             });
-        } else if (event.key.startsWith('Arrow')) {
-            event.preventDefault();
+        } else if (key.startsWith('Arrow')) {
             let newRow = row;
             let newCol = col;
             let newDirection = direction;
 
-            switch (event.key) {
+            switch (key) {
                 case 'ArrowUp':
                     newRow = Math.max(0, row - 1);
                     newDirection = 'down';
@@ -297,11 +296,26 @@ export const Crossword: React.FC = () => {
                 }));
             }
         }
-    }, [gameState.selectedCell, gameState.activeClue, findClueFromCell, getNextCell, getNextClue, toggleDirection]);
+    }, [gameState.selectedCell, gameState.activeClue?.direction, toggleDirection, getNextCell, getNextClue, findClueStart, findClueFromCell]);
 
+    // Handle physical keyboard events
     useEffect(() => {
-        window.addEventListener('keydown', handleKeyPress);
-        return () => window.removeEventListener('keydown', handleKeyPress);
+        const handleKeyDown = (event: KeyboardEvent) => {
+            if (event.key === 'Backspace' || event.key === 'Delete') {
+                handleKeyPress('BACKSPACE');
+            } else {
+                const key = event.key.toUpperCase();
+                if (key === 'ENTER' || /^[A-Z]$/.test(key) || key.startsWith('Arrow')) {
+                    if (key.startsWith('Arrow')) {
+                        event.preventDefault();
+                    }
+                    handleKeyPress(key);
+                }
+            }
+        };
+
+        window.addEventListener('keydown', handleKeyDown);
+        return () => window.removeEventListener('keydown', handleKeyDown);
     }, [handleKeyPress]);
 
     useEffect(() => {
@@ -347,23 +361,6 @@ export const Crossword: React.FC = () => {
                 backgroundColor: isSelected
                     ? '#fff7d1'
                     : '#fffbe6',
-            },
-        };
-    };
-
-    const getClueStyle = (number: number, direction: Direction) => {
-        const isActive = gameState.activeClue?.number === number && 
-                        gameState.activeClue?.direction === direction;
-        
-        return {
-            mb: 1.5,
-            color: 'text.primary',
-            backgroundColor: isActive ? '#fff9e6' : 'transparent',
-            padding: 1,
-            borderRadius: 1,
-            cursor: 'pointer',
-            '&:hover': {
-                backgroundColor: '#fffbe6',
             },
         };
     };
@@ -417,238 +414,252 @@ export const Crossword: React.FC = () => {
     return (
         <Box 
             sx={{
-                height: {
-                    xs: 'calc(100vh - 56px - 16px - 1px)',
-                    sm: 'calc(100vh - 64px - 32px - 1px)',
-                },
                 display: 'flex',
                 flexDirection: 'column',
+                height: 'calc(100vh - 57px)',
                 px: 2,
                 py: { xs: 1, sm: 2 },
                 overflow: 'hidden',
             }}
         >
+            {/* Main Content Container */}
             <Box sx={{
                 flex: 1,
                 width: '100%',
                 maxWidth: { xs: 'sm', sm: '100%' },
-                display: 'grid',
-                gridTemplateRows: { xs: '1fr auto', sm: '1fr' },
-                gap: 2,
+                display: 'flex',
+                flexDirection: 'column',
                 overflow: 'hidden',
                 mx: 'auto',
             }}>
-                {/* Game Content */}
+                {/* Scrollable Game Content */}
                 <Box sx={{
+                    flex: 1,
                     width: '100%',
-                    height: '100%',
+                    WebkitOverflowScrolling: 'touch', // Smooth scrolling on iOS
+                    msOverflowStyle: 'none', // Hide scrollbar on IE/Edge
+                    scrollbarWidth: 'none', // Hide scrollbar on Firefox
+                    '&::-webkit-scrollbar': { // Hide scrollbar on Chrome/Safari/Webkit
+                        display: 'none'
+                    },
                     display: 'flex',
-                    flexDirection: { xs: 'column', sm: 'row' },
-                    gap: 2,
-                    overflow: 'hidden',
+                    alignItems: 'center',
                 }}>
-                    {/* Game Board Container */}
                     <Box sx={{
-                        width: { xs: '100%', sm: '800px' },
-                        height: '100%',
+                        width: '100%',
                         display: 'flex',
-                        flexDirection: 'column',
-                        alignItems: 'center',
-                        justifyContent: 'center',
+                        flexDirection: { xs: 'column', sm: 'row' },
+                        gap: 2,
                     }}>
-                        {/* Game Board */}
-                        <Box
-                            sx={{
-                                width: '100%',
-                                maxWidth: { xs: '100%', sm: '800px' },
-                                aspectRatio: '1/1',
-                                backgroundColor: alpha(theme.palette.text.primary, 0.23),
-                                border: `2px solid ${theme.palette.text.primary}`,
-                                borderRadius: 1,
-                                padding: 0,
-                                margin: '0 auto',
-                                overflow: 'hidden',
-                                position: 'relative',
-                            }}
-                        >
-                            <Box
-                                sx={{
-                                    display: 'grid',
-                                    gridTemplateColumns: 'repeat(5, 1fr)',
-                                    gap: '1px',
-                                    width: '100%',
-                                    height: '100%',
-                                    position: 'absolute',
-                                    top: 0,
-                                    left: 0,
-                                    right: 0,
-                                    bottom: 0,
-                                }}
-                            >
-                                {gameState.board.map((row, i) =>
-                                    row.map((cell, j) => (
-                                        <Box
-                                            key={`${i}-${j}`}
-                                            onClick={() => {
-                                                const currentDirection = gameState.activeClue?.direction || 'across';
-                                                
-                                                // If clicking the same cell, toggle direction
-                                                if (gameState.selectedCell?.row === i && gameState.selectedCell?.col === j) {
-                                                    const newDirection = currentDirection === 'across' ? 'down' : 'across';
-                                                    const clueNumber = findClueFromCell(i, j, newDirection);
-                                                    if (clueNumber) {
-                                                        handleClueClick(clueNumber, newDirection, { row: i, col: j });
-                                                    }
-                                                } else {
-                                                    // Try to keep the same direction when moving to a new cell
-                                                    let clueNumber = findClueFromCell(i, j, currentDirection);
-                                                    let direction = currentDirection;
-                                                    
-                                                    // If no clue found in current direction, try the other direction
-                                                    if (!clueNumber) {
-                                                        direction = currentDirection === 'across' ? 'down' : 'across';
-                                                        clueNumber = findClueFromCell(i, j, direction);
-                                                    }
-                                                    
-                                                    if (clueNumber) {
-                                                        handleClueClick(clueNumber, direction, { row: i, col: j });
-                                                    }
-                                                }
-                                            }}
-                                            sx={{
-                                                ...getCellStyle(i, j),
-                                                borderRadius: 0,
-                                            }}
-                                        >
-                                            {cell.number && (
-                                                <Typography
-                                                    sx={{
-                                                        position: 'absolute',
-                                                        top: '2px',
-                                                        left: '2px',
-                                                        fontSize: { xs: '0.7rem', sm: '1rem' },
-                                                        lineHeight: 1,
-                                                        fontWeight: 600,
-                                                        color: 'text.secondary',
-                                                        userSelect: 'none',
-                                                        padding: '1px',
-                                                    }}
-                                                >
-                                                    {cell.number}
-                                                </Typography>
-                                            )}
-                                            <Typography
-                                                variant="h6"
-                                                sx={{
-                                                    fontWeight: 600,
-                                                    color: 'text.primary',
-                                                    userSelect: 'none',
-                                                    fontSize: { xs: '1.25rem', sm: '2rem' },
-                                                }}
-                                            >
-                                                {cell.letter || ''}
-                                            </Typography>
-                                        </Box>
-                                    ))
-                                )}
-                            </Box>
-                        </Box>
-                    </Box>
-
-                    {/* Clues Section - Desktop */}
-                    {!isMobile && (
-                        <Box sx={{ 
-                            flex: 1,
-                            minWidth: { sm: '300px' },
-                            maxWidth: { sm: '400px' },
-                            height: '100%',
+                        {/* Game Board Container */}
+                        <Box sx={{
+                            width: { xs: '100%', sm: '800px' },
                             display: 'flex',
                             flexDirection: 'column',
-                            gap: 2,
-                            overflow: 'auto',
-                            px: 2,
+                            alignItems: 'center',
+                            justifyContent: 'center',
                         }}>
-                            {/* Across Clues */}
-                            <Box>
-                                <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 1 }}>
-                                    Across
-                                </Typography>
-                                {gameState.clues
-                                    .filter(clue => clue.direction === 'across')
-                                    .map(clue => (
-                                        <Box
-                                            key={`across-${clue.number}`}
-                                            onClick={() => handleClueClick(clue.number, 'across')}
-                                            sx={{
-                                                p: 1,
-                                                cursor: 'pointer',
-                                                borderRadius: 1,
-                                                backgroundColor: 
-                                                    gameState.activeClue?.number === clue.number && 
-                                                    gameState.activeClue?.direction === 'across'
-                                                        ? 'action.selected'
-                                                        : 'transparent',
-                                                '&:hover': {
-                                                    backgroundColor: 'action.hover',
-                                                },
-                                            }}
-                                        >
-                                            <Typography>
-                                                <strong>{clue.number}.</strong> {clue.clue}
-                                            </Typography>
-                                        </Box>
-                                    ))}
+                            {/* Game Board */}
+                            <Box
+                                sx={{
+                                    width: '100%',
+                                    maxWidth: { xs: '100%', sm: '800px' },
+                                    aspectRatio: '1/1',
+                                    backgroundColor: alpha(theme.palette.text.primary, 0.23),
+                                    border: `2px solid ${theme.palette.text.primary}`,
+                                    borderRadius: 1,
+                                    padding: 0,
+                                    margin: '0 auto',
+                                    overflow: 'hidden',
+                                    position: 'relative',
+                                }}
+                            >
+                                <Box
+                                    sx={{
+                                        display: 'grid',
+                                        gridTemplateColumns: 'repeat(5, 1fr)',
+                                        gap: '1px',
+                                        width: '100%',
+                                        height: '100%',
+                                        position: 'absolute',
+                                        top: 0,
+                                        left: 0,
+                                        right: 0,
+                                        bottom: 0,
+                                    }}
+                                >
+                                    {gameState.board.map((row, i) =>
+                                        row.map((cell, j) => (
+                                            <Box
+                                                key={`${i}-${j}`}
+                                                onClick={() => {
+                                                    const currentDirection = gameState.activeClue?.direction || 'across';
+                                                    
+                                                    // If clicking the same cell, toggle direction
+                                                    if (gameState.selectedCell?.row === i && gameState.selectedCell?.col === j) {
+                                                        const newDirection = currentDirection === 'across' ? 'down' : 'across';
+                                                        const clueNumber = findClueFromCell(i, j, newDirection);
+                                                        if (clueNumber) {
+                                                            handleClueClick(clueNumber, newDirection, { row: i, col: j });
+                                                        }
+                                                    } else {
+                                                        // Try to keep the same direction when moving to a new cell
+                                                        let clueNumber = findClueFromCell(i, j, currentDirection);
+                                                        let direction = currentDirection;
+                                                        
+                                                        // If no clue found in current direction, try the other direction
+                                                        if (!clueNumber) {
+                                                            direction = currentDirection === 'across' ? 'down' : 'across';
+                                                            clueNumber = findClueFromCell(i, j, direction);
+                                                        }
+                                                        
+                                                        if (clueNumber) {
+                                                            handleClueClick(clueNumber, direction, { row: i, col: j });
+                                                        }
+                                                    }
+                                                }}
+                                                sx={{
+                                                    ...getCellStyle(i, j),
+                                                    borderRadius: 0,
+                                                }}
+                                            >
+                                                {cell.number && (
+                                                    <Typography
+                                                        sx={{
+                                                            position: 'absolute',
+                                                            top: '2px',
+                                                            left: '2px',
+                                                            fontSize: { xs: '0.7rem', sm: '1rem' },
+                                                            lineHeight: 1,
+                                                            fontWeight: 600,
+                                                            color: 'text.secondary',
+                                                            userSelect: 'none',
+                                                            padding: '1px',
+                                                        }}
+                                                    >
+                                                        {cell.number}
+                                                    </Typography>
+                                                )}
+                                                <Typography
+                                                    variant="h6"
+                                                    sx={{
+                                                        fontWeight: 600,
+                                                        color: 'text.primary',
+                                                        userSelect: 'none',
+                                                        fontSize: { xs: '1.25rem', sm: '2rem' },
+                                                    }}
+                                                >
+                                                    {cell.letter || ''}
+                                                </Typography>
+                                            </Box>
+                                        ))
+                                    )}
+                                </Box>
                             </Box>
 
-                            {/* Down Clues */}
-                            <Box>
-                                <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 1 }}>
-                                    Down
-                                </Typography>
-                                {gameState.clues
-                                    .filter(clue => clue.direction === 'down')
-                                    .map(clue => (
-                                        <Box
-                                            key={`down-${clue.number}`}
-                                            onClick={() => handleClueClick(clue.number, 'down')}
-                                            sx={{
-                                                p: 1,
-                                                cursor: 'pointer',
-                                                borderRadius: 1,
-                                                backgroundColor: 
-                                                    gameState.activeClue?.number === clue.number && 
-                                                    gameState.activeClue?.direction === 'down'
-                                                        ? 'action.selected'
-                                                        : 'transparent',
-                                                '&:hover': {
-                                                    backgroundColor: 'action.hover',
-                                                },
-                                            }}
-                                        >
-                                            <Typography>
-                                                <strong>{clue.number}.</strong> {clue.clue}
-                                            </Typography>
-                                        </Box>
-                                    ))}
-                            </Box>
+                            {/* Controls Section - Desktop */}
+                            {!isMobile && (
+                                <Box sx={{
+                                    display: 'flex',
+                                    width: '100%',
+                                    mt: 2,
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                }}>
+                                    <Keyboard
+                                        onKeyPress={handleKeyPress}
+                                        letterStates={{}}
+                                    />
+                                </Box>
+                            )}
                         </Box>
-                    )}
+
+                        {/* Clues Section - Desktop */}
+                        {!isMobile && (
+                            <Box sx={{ 
+                                flex: 1,
+                                minWidth: { sm: '300px' },
+                                maxWidth: { sm: '400px' },
+                                height: '100%',
+                                display: 'flex',
+                                flexDirection: 'column',
+                                gap: 2,
+                                overflow: 'auto',
+                                px: 2,
+                            }}>
+                                {/* Across Clues */}
+                                <Box>
+                                    <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 1 }}>
+                                        Across
+                                    </Typography>
+                                    {gameState.clues
+                                        .filter(clue => clue.direction === 'across')
+                                        .map(clue => (
+                                            <Box
+                                                key={`across-${clue.number}`}
+                                                onClick={() => handleClueClick(clue.number, 'across')}
+                                                sx={{
+                                                    p: 1,
+                                                    cursor: 'pointer',
+                                                    borderRadius: 1,
+                                                    backgroundColor: 
+                                                        gameState.activeClue?.number === clue.number && 
+                                                        gameState.activeClue?.direction === 'across'
+                                                            ? 'action.selected'
+                                                            : 'transparent',
+                                                    '&:hover': {
+                                                        backgroundColor: 'action.hover',
+                                                    },
+                                                }}
+                                            >
+                                                <Typography>
+                                                    <strong>{clue.number}.</strong> {clue.clue}
+                                                </Typography>
+                                            </Box>
+                                        ))}
+                                </Box>
+
+                                {/* Down Clues */}
+                                <Box>
+                                    <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 1 }}>
+                                        Down
+                                    </Typography>
+                                    {gameState.clues
+                                        .filter(clue => clue.direction === 'down')
+                                        .map(clue => (
+                                            <Box
+                                                key={`down-${clue.number}`}
+                                                onClick={() => handleClueClick(clue.number, 'down')}
+                                                sx={{
+                                                    p: 1,
+                                                    cursor: 'pointer',
+                                                    borderRadius: 1,
+                                                    backgroundColor: 
+                                                        gameState.activeClue?.number === clue.number && 
+                                                        gameState.activeClue?.direction === 'down'
+                                                            ? 'action.selected'
+                                                            : 'transparent',
+                                                    '&:hover': {
+                                                        backgroundColor: 'action.hover',
+                                                    },
+                                                }}
+                                            >
+                                                <Typography>
+                                                    <strong>{clue.number}.</strong> {clue.clue}
+                                                </Typography>
+                                            </Box>
+                                        ))}
+                                </Box>
+                            </Box>
+                        )}
+                    </Box>
                 </Box>
 
                 {/* Active Clue Section - Mobile */}
                 {isMobile && activeClue && (
                     <Box sx={{
-                        position: 'sticky',
-                        bottom: 0,
-                        left: 0,
-                        right: 0,
                         width: '100%',
-                        backdropFilter: 'blur(8px)',
-                        borderTopLeftRadius: 2,
-                        borderTopRightRadius: 2,
-                        boxShadow: 1,
                         px: { xs: 0.5, sm: 1 },
-                        py: { xs: 1, sm: 1.5 },
                     }}>
                         <ActiveClue
                             clue={activeClue}
@@ -662,6 +673,35 @@ export const Crossword: React.FC = () => {
                         />
                     </Box>
                 )}
+                
+                {/* Controls Section - Mobile */}
+                {isMobile && (
+                    <Box sx={{
+                        display: 'flex',
+                        width: '100%',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        bgcolor: (theme) => theme.palette.mode === 'light' 
+                            ? 'rgba(255, 255, 255, 0.9)'
+                            : 'rgba(18, 18, 18, 0.9)',
+                        backdropFilter: 'blur(8px)',
+                        borderTopLeftRadius: 2,
+                        borderTopRightRadius: 2,
+                        boxShadow: 1,
+                        px: { xs: 1, sm: 2 },
+                        py: { xs: 1, sm: 1.5 },
+                        mt: 2,
+                    }}>
+                        <Box sx={{ width: '100%', maxWidth: '500px' }}>
+                            <Keyboard
+                                onKeyPress={handleKeyPress}
+                                letterStates={{}}
+                            />
+                        </Box>
+                    </Box>
+                )}
+
+                
             </Box>
         </Box>
     );

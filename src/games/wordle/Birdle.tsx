@@ -235,10 +235,7 @@ export const Birdle: React.FC = () => {
     return (
         <Box 
             sx={{
-                height: {
-                    xs: 'calc(100vh - 56px - 16px - 1px)',
-                    sm: 'calc(100vh - 64px - 32px - 1px)',
-                },
+                height: 'calc(100vh - 57px)',
                 display: 'flex',
                 flexDirection: 'column',
                 px: { xs: 1, sm: 2 },
@@ -252,20 +249,18 @@ export const Birdle: React.FC = () => {
                 height: '100%',
                 maxWidth: { xs: '100%', sm: 'sm' },
                 mx: 'auto',
-                display: 'grid',
-                gridTemplateRows: { xs: '1fr auto', sm: '1fr' },
-                alignItems: 'center',
-                gap: 0,
+                display: 'flex',
+                flexDirection: 'column',
             }}>
                 {/* Game Content */}
                 <Box sx={{
+                    flex: 1,
                     width: '100%',
-                    height: '100%',
                     display: 'flex',
                     flexDirection: 'column',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    overflow: 'hidden',
+                    overflow: 'auto',
                 }}>
                     {/* Game Board */}
                     <Box sx={{
@@ -276,7 +271,6 @@ export const Birdle: React.FC = () => {
                         alignItems: 'center',
                         justifyContent: 'center',
                         overflow: 'hidden',
-                        pb: { xs: 1, sm: 2 },
                     }}>
                         <GameBoard 
                             guesses={gameState.guesses}
@@ -284,34 +278,14 @@ export const Birdle: React.FC = () => {
                             isWinningGuess={gameState.hasWon}
                         />
                     </Box>
-
-                    {/* Controls Section - Desktop */}
-                    <Box sx={{
-                        display: { xs: 'none', sm: 'flex' },
-                        width: '100%',
-                        maxWidth: '500px',
-                        mt: 2,
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                    }}>
-                        <Keyboard
-                            onKeyPress={handleKeyPress}
-                            letterStates={letterStates}
-                        />
-                    </Box>
                 </Box>
 
-                {/* Controls Section - Mobile */}
+                {/* Controls Section */}
                 <Box sx={{
-                    display: { xs: 'flex', sm: 'none' },
-                    position: 'sticky',
-                    bottom: 0,
-                    left: 0,
-                    right: 0,
                     width: '100%',
+                    display: 'flex',
+                    flexDirection: 'column',
                     alignItems: 'center',
-                    justifyContent: 'center',
-                    overflow: 'hidden',
                     bgcolor: (theme) => theme.palette.mode === 'light' 
                         ? 'rgba(255, 255, 255, 0.9)'
                         : 'rgba(18, 18, 18, 0.9)',

@@ -26,6 +26,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
@@ -48,6 +50,7 @@
   },
   "homepage": "https://mchartier.github.io/daily-games",
   "devDependencies": {
-    "@mui/types": "^7.2.21"
+    "@mui/types": "^7.2.21",
+    "gh-pages": "^6.3.0"
   }
 }

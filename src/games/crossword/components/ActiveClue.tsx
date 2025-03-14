@@ -25,7 +25,6 @@ export const ActiveClue: React.FC<ActiveClueProps> = ({
                 alignItems: 'center',
                 gap: 1,
                 p: 2,
-                mb: 2,
                 height: '80px',
                 width: '100%',
                 backgroundColor: '#fff9e6',
