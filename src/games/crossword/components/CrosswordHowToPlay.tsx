@@ -1,10 +1,10 @@
-import React from 'react';
-import { Box, Typography, List, ListItem, ListItemIcon, ListItemText } from '@mui/material';
-import { HowToPlayModal } from '../../../components/HowToPlayModal';
-import SwapHorizIcon from '@mui/icons-material/SwapHoriz';
-import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import SwapHorizIcon from '@mui/icons-material/SwapHoriz';
 import TouchAppIcon from '@mui/icons-material/TouchApp';
+import { Box, List, ListItem, ListItemIcon, ListItemText, Typography } from '@mui/material';
+import React from 'react';
+import { HowToPlayModal } from '../../../components/HowToPlayModal';
 
 interface CrosswordHowToPlayProps {
     open: boolean;

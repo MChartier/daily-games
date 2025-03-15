@@ -1,14 +1,14 @@
-import React, { useState, useEffect } from 'react';
-import { Box, Typography, useTheme, IconButton, useMediaQuery } from '@mui/material';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { FlutterDash, HelpOutline } from '@mui/icons-material';
+import { Box, IconButton, useMediaQuery, useTheme } from '@mui/material';
+import React, { useEffect, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { gameColors } from '../../App';
+import { GameStartScreen } from '../../components/GameStartScreen';
+import { useHelp } from '../../contexts/HelpContext';
 import { GameBoard } from './components/GameBoard';
 import { Keyboard } from './components/Keyboard';
-import { GameState, Guess, Letter, LetterState } from './types';
-import { FlutterDash, HelpOutline } from '@mui/icons-material';
-import { GameStartScreen } from '../../components/GameStartScreen';
-import { gameColors } from '../../App';
 import { WordleHowToPlay } from './components/WordleHowToPlay';
-import { useHelp } from '../../contexts/HelpContext';
+import { GameState, Guess, Letter, LetterState } from './types';
 
 // Hardcoded list of 5-letter bird names
 const BIRD_WORDS = [

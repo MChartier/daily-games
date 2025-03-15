@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { Box, Typography, Paper, Grid, useMediaQuery, IconButton } from '@mui/material';
+import React, { useState, useEffect, useCallback } from 'react';
+import { Box, Typography, useMediaQuery, IconButton } from '@mui/material';
 import { CrosswordCell, CrosswordClue, GameState, Direction } from './types';
 import { useNavigate } from 'react-router-dom';
 import { useTheme } from '@mui/material/styles';

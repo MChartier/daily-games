@@ -1,15 +1,14 @@
-import React from 'react';
-import {
-    Dialog,
-    DialogTitle,
-    DialogContent,
-    DialogActions,
-    Button,
-    Typography,
-    IconButton,
-    Box,
-} from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
+import {
+    Button,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+    IconButton,
+    Typography
+} from '@mui/material';
+import React from 'react';
 
 interface HowToPlayModalProps {
     open: boolean;

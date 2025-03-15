@@ -1,5 +1,5 @@
+import { Box, Grid, List, ListItem, ListItemText, Typography } from '@mui/material';
 import React from 'react';
-import { Box, Typography, List, ListItem, ListItemText, Grid } from '@mui/material';
 import { HowToPlayModal } from '../../../components/HowToPlayModal';
 
 interface SudokuHowToPlayProps {

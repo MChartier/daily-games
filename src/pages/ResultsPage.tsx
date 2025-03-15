@@ -1,19 +1,19 @@
-import React, { useState } from 'react';
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
-import { 
-    Box, 
-    Typography, 
-    Button, 
+import { Home, Share } from '@mui/icons-material';
+import {
+    Alert,
+    Box,
+    Button,
     Paper,
     Snackbar,
-    Alert
+    Typography
 } from '@mui/material';
-import { Share, Home } from '@mui/icons-material';
-import { GameResult } from '../types/game';
+import React, { useState } from 'react';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { SudokuResults } from '../games/sudoku/components/SudokuResults';
-import { BirdleResults } from '../games/wordle/components/BirdleResults';
 import { Cell } from '../games/sudoku/types';
+import { BirdleResults } from '../games/wordle/components/BirdleResults';
 import { Guess } from '../games/wordle/types';
+import { GameResult } from '../types/game';
 
 // Type guards
 const isSudokuBoard = (board: Cell[][] | Guess[] | undefined): board is Cell[][] => {

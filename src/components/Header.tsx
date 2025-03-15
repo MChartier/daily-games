@@ -1,30 +1,29 @@
-import React, { useState } from 'react';
-import { 
-    AppBar, 
-    Toolbar, 
-    Button, 
-    Box, 
-    useTheme,
-    IconButton,
+import {
+    Close as CloseIcon,
+    Extension,
+    FlutterDash,
+    Grid4x4,
+    Menu as MenuIcon,
+    Psychology
+} from '@mui/icons-material';
+import {
+    AppBar,
+    Box,
+    Button,
     Drawer,
+    IconButton,
     List,
     ListItem,
     ListItemButton,
-    ListItemText,
     ListItemIcon,
+    ListItemText,
+    Toolbar,
     Typography,
     useMediaQuery,
+    useTheme,
 } from '@mui/material';
-import { useNavigate, useLocation } from 'react-router-dom';
-import { 
-    Menu as MenuIcon,
-    Psychology,
-    Extension,
-    Grid4x4,
-    FlutterDash,
-    Close as CloseIcon,
-    HelpOutline
-} from '@mui/icons-material';
+import React, { useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { gameColors } from '../App';
 import { useHelp } from '../contexts/HelpContext';
 

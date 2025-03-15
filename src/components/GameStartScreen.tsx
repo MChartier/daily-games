@@ -1,11 +1,11 @@
-import React from 'react';
-import { Box, Button, Typography, useTheme } from '@mui/material';
 import { HelpOutline, PlayArrow } from '@mui/icons-material';
+import { Box, Button, Typography } from '@mui/material';
+import { alpha } from '@mui/material/styles';
+import React from 'react';
 import { useHelp } from '../contexts/HelpContext';
-import { WordleHowToPlay } from '../games/wordle/components/WordleHowToPlay';
 import { CrosswordHowToPlay } from '../games/crossword/components/CrosswordHowToPlay';
 import { SudokuHowToPlay } from '../games/sudoku/components/SudokuHowToPlay';
-import { alpha } from '@mui/material/styles';
+import { WordleHowToPlay } from '../games/wordle/components/WordleHowToPlay';
 
 interface GameStartScreenProps {
     onStart: () => void;

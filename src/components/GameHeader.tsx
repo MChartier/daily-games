@@ -1,5 +1,5 @@
-import { Box, Typography, IconButton, Tooltip, useTheme, useMediaQuery } from '@mui/material';
 import { Help as HelpIcon, Refresh as RefreshIcon } from '@mui/icons-material';
+import { Box, IconButton, Tooltip, Typography, useMediaQuery, useTheme } from '@mui/material';
 import { ReactNode } from 'react';
 
 interface GameHeaderProps {

@@ -1,5 +1,5 @@
+import { Box, Typography } from '@mui/material';
 import React from 'react';
-import { Box, Typography, Grid } from '@mui/material';
 import { HowToPlayModal } from '../../../components/HowToPlayModal';
 
 interface WordleHowToPlayProps {

@@ -1,16 +1,14 @@
-import React, { useState, useEffect } from 'react';
-import { Box, Typography, Container, useTheme, Button, IconButton } from '@mui/material';
+import { Grid4x4, HelpOutline } from '@mui/icons-material';
+import { Box, IconButton, useMediaQuery, useTheme } from '@mui/material';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { gameColors } from '../../App';
+import { GameStartScreen } from '../../components/GameStartScreen';
+import { useHelp } from '../../contexts/HelpContext';
 import { GameBoard } from './components/GameBoard';
 import { NumberPad } from './components/NumberPad';
-import { GameState, Cell, CellState } from './types';
-import { Grid4x4, HelpOutline } from '@mui/icons-material';
-import { GameStartScreen } from '../../components/GameStartScreen';
-import { gameColors } from '../../App';
 import { SudokuHowToPlay } from './components/SudokuHowToPlay';
-import { GridOn } from '@mui/icons-material';
-import { useHelp } from '../../contexts/HelpContext';
-import { useMediaQuery } from '@mui/material';
+import { GameState } from './types';
 
 // Sample puzzle (0 represents empty cells)
 const SAMPLE_PUZZLE = [

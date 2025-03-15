@@ -1,5 +1,5 @@
+import { Box, Container, Grid, Typography, useMediaQuery, useTheme } from '@mui/material';
 import React from 'react';
-import { Box, Typography, Grid, Container, useTheme, useMediaQuery } from '@mui/material';
 import { GameCard } from '../components/GameCard';
 import { GameInfo } from '../types/game';
 

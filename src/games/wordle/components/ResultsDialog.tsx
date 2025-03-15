@@ -1,16 +1,16 @@
-import React from 'react';
-import {
-    Dialog,
-    DialogTitle,
-    DialogContent,
-    DialogActions,
-    Button,
-    Typography,
-    Box,
-    Grid
-} from '@mui/material';
-import { useNavigate } from 'react-router-dom';
 import { EmojiEvents, Timer, TrendingUp } from '@mui/icons-material';
+import {
+    Box,
+    Button,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+    Grid,
+    Typography
+} from '@mui/material';
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
 interface ResultsDialogProps {
     open: boolean;
