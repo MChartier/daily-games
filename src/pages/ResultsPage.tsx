@@ -11,8 +11,8 @@ import React, { useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { SudokuResults } from '../games/sudoku/components/SudokuResults';
 import { Cell } from '../games/sudoku/types';
-import { BirdleResults } from '../games/wordle/components/BirdleResults';
-import { Guess } from '../games/wordle/types';
+import { BirdleResults } from '../games/birdle/components/BirdleResults';
+import { Guess } from '../games/birdle/types';
 import { GameResult } from '../types/game';
 
 // Type guards
@@ -68,6 +68,8 @@ export const ResultsPage: React.FC = () => {
                     board={result.board}
                     timeSpent={result.timeSpent}
                     attempts={result.attempts}
+                    answer={result.answer || ''}
+                    won={result.won}
                 />
             );
         }

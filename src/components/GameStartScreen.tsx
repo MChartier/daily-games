@@ -5,7 +5,7 @@ import React from 'react';
 import { useHelp } from '../contexts/HelpContext';
 import { CrosswordHowToPlay } from '../games/crossword/components/CrosswordHowToPlay';
 import { SudokuHowToPlay } from '../games/sudoku/components/SudokuHowToPlay';
-import { WordleHowToPlay } from '../games/wordle/components/WordleHowToPlay';
+import { BirdleHowToPlay } from '../games/birdle/components/BirdleHowToPlay';
 
 interface GameStartScreenProps {
     onStart: () => void;
@@ -25,7 +25,7 @@ export const GameStartScreen: React.FC<GameStartScreenProps> = ({
     const { showHelp, setShowHelp } = useHelp();
 
     const HelpModal = {
-        birdle: WordleHowToPlay,
+        birdle: BirdleHowToPlay,
         crossword: CrosswordHowToPlay,
         sudoku: SudokuHowToPlay
     }[gameType];

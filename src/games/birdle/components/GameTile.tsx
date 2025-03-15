@@ -1,11 +1,12 @@
 import React from 'react';
 import { Box, Typography, useTheme, keyframes } from '@mui/material';
-import { Letter } from '../types';
+import { Letter, LetterState } from '../types';
 
 interface GameTileProps {
     letter: Letter;
     isActive: boolean;
     shouldAnimate?: boolean;
+    isLosingReveal?: boolean;
 }
 
 const bounce = keyframes`
@@ -29,6 +30,18 @@ const bounce = keyframes`
     }
 `;
 
+const shake = keyframes`
+    0%, 100% {
+        transform: translateX(0);
+    }
+    20%, 60% {
+        transform: translateX(-5px);
+    }
+    40%, 80% {
+        transform: translateX(5px);
+    }
+`;
+
 const sparkle = keyframes`
     0% {
         background-position: 50% 50%;
@@ -43,8 +56,8 @@ const sparkle = keyframes`
     }
 `;
 
-const getTileColor = (state: Letter['state'], isActive: boolean) => {
-    if (isActive) return 'background.paper';
+const getTileColor = (state: Letter['state'], isActive: boolean, isLosingReveal: boolean, shouldAnimate: boolean) => {
+    if (isActive && !shouldAnimate) return 'background.paper';
     
     switch (state) {
         case 'correct':
@@ -52,7 +65,7 @@ const getTileColor = (state: Letter['state'], isActive: boolean) => {
         case 'present':
             return '#FFB020'; // Yellow
         case 'absent':
-            return '#6B7280'; // Gray
+            return isLosingReveal && shouldAnimate ? '#DC2626' : '#6B7280'; // Red for final incorrect guesses, Grey otherwise
         default:
             return 'background.paper';
     }
@@ -64,9 +77,14 @@ const getBorderColor = (state: Letter['state'], isActive: boolean) => {
     return 'transparent';
 };
 
-export const GameTile: React.FC<GameTileProps> = ({ letter, isActive, shouldAnimate = false }) => {
+export const GameTile: React.FC<GameTileProps> = ({ 
+    letter, 
+    isActive, 
+    shouldAnimate = false,
+    isLosingReveal = false
+}) => {
     // Force empty state for active tiles until they're submitted
-    const effectiveState = isActive ? 'empty' : letter.state;
+    const effectiveState = isActive && !shouldAnimate ? 'empty' : letter.state;
 
     return (
         <Box
@@ -76,13 +94,16 @@ export const GameTile: React.FC<GameTileProps> = ({ letter, isActive, shouldAnim
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                backgroundColor: getTileColor(effectiveState, isActive),
+                backgroundColor: getTileColor(effectiveState, isActive, isLosingReveal, shouldAnimate),
                 border: 2,
                 borderColor: getBorderColor(effectiveState, isActive),
                 borderRadius: 1,
                 transition: 'all 0.2s ease-in-out',
-                animation: shouldAnimate && effectiveState === 'correct' ? 
-                    `${bounce} 1s ease-in-out` : undefined,
+                animation: shouldAnimate && isLosingReveal ? 
+                    `${shake} 0.5s ease-in-out` : 
+                    shouldAnimate && (effectiveState as LetterState) === 'correct' ? 
+                        `${bounce} 1s ease-in-out` : 
+                        undefined,
                 '&:hover': isActive ? {
                     borderColor: 'primary.dark',
                 } : undefined,
@@ -101,13 +122,11 @@ export const GameTile: React.FC<GameTileProps> = ({ letter, isActive, shouldAnim
             }}
         >
             <Typography
-                variant="inherit"
-                component="span"
+                variant="body1"
                 sx={{
                     fontWeight: 700,
-                    color: effectiveState === 'empty' || isActive ? 'text.primary' : 'white',
-                    textTransform: 'uppercase',
-                    fontSize: 'clamp(1rem, 4vw, 1.75rem)',
+                    color: letter.value && (!isActive || shouldAnimate) ? 'white' : 'text.primary',
+                    fontSize: { xs: '1.25rem', sm: '1.5rem' },
                 }}
             >
                 {letter.value}

@@ -7,9 +7,15 @@ interface GameBoardProps {
     guesses: Guess[];
     currentGuess: number;
     isWinningGuess?: boolean;
+    isLosingReveal?: boolean;
 }
 
-export const GameBoard: React.FC<GameBoardProps> = ({ guesses, currentGuess, isWinningGuess = false }) => {
+export const GameBoard: React.FC<GameBoardProps> = ({ 
+    guesses, 
+    currentGuess, 
+    isWinningGuess = false,
+    isLosingReveal = false
+}) => {
     const rows = 6;
     const cols = 5;
 
@@ -34,7 +40,7 @@ export const GameBoard: React.FC<GameBoardProps> = ({ guesses, currentGuess, isW
                     {Array.from({ length: cols }).map((_, colIndex) => {
                         const guess = guesses[rowIndex];
                         const letter = guess?.letters[colIndex] || { value: '', state: 'empty' };
-                        const shouldAnimate = isWinningGuess && rowIndex === currentGuess - 1;
+                        const shouldAnimate = (isWinningGuess || isLosingReveal) && rowIndex === currentGuess;
                         return (
                             <Grid 
                                 item 
@@ -49,6 +55,7 @@ export const GameBoard: React.FC<GameBoardProps> = ({ guesses, currentGuess, isW
                                     letter={letter}
                                     isActive={rowIndex === currentGuess}
                                     shouldAnimate={shouldAnimate}
+                                    isLosingReveal={isLosingReveal}
                                 />
                             </Grid>
                         );

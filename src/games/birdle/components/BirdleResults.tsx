@@ -6,9 +6,11 @@ interface BirdleResultsProps {
     board: Guess[];
     timeSpent: number;
     attempts: number;
+    answer: string;
+    won: boolean;
 }
 
-export const BirdleResults: React.FC<BirdleResultsProps> = ({ board, timeSpent, attempts }) => {
+export const BirdleResults: React.FC<BirdleResultsProps> = ({ board, timeSpent, attempts, answer, won }) => {
     const formatTime = (seconds: number): string => {
         const minutes = Math.floor(seconds / 60);
         const remainingSeconds = seconds % 60;
@@ -21,8 +23,17 @@ export const BirdleResults: React.FC<BirdleResultsProps> = ({ board, timeSpent, 
                 <Typography variant="h6" gutterBottom>
                     Time: {formatTime(timeSpent)}
                 </Typography>
-                <Typography variant="h6">
-                    Solved in {attempts} {attempts === 1 ? 'try' : 'tries'}
+                {won ? (
+                    <Typography variant="h6">
+                        Solved in {attempts} {attempts === 1 ? 'try' : 'tries'}
+                    </Typography>
+                ) : (
+                    <Typography variant="h6" gutterBottom>
+                        Better luck next time!
+                    </Typography>
+                )}
+                <Typography variant="h6" sx={{ mt: 1, color: 'text.secondary' }}>
+                    The answer was: {answer}
                 </Typography>
             </Box>
 

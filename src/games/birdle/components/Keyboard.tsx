@@ -6,7 +6,7 @@ import { LetterState } from '../types';
 interface KeyboardProps {
     onKeyPress: (key: string) => void;
     letterStates: Record<string, LetterState>;
-    variant?: 'crossword' | 'wordle';
+    variant?: 'crossword' | 'Birdle';
 }
 
 const KEYBOARD_LAYOUT = [
@@ -30,8 +30,8 @@ const getKeyColor = (state: LetterState | undefined) => {
     }
 };
 
-export const Keyboard: React.FC<KeyboardProps> = ({ onKeyPress, letterStates, variant = 'wordle' }) => {
-    const isWordle = variant === 'wordle';
+export const Keyboard: React.FC<KeyboardProps> = ({ onKeyPress, letterStates, variant = 'Birdle' }) => {
+    const isBirdle = variant === 'Birdle';
 
     return (
         <Box sx={{ 
@@ -58,8 +58,8 @@ export const Keyboard: React.FC<KeyboardProps> = ({ onKeyPress, letterStates, va
                 >
                     {row.map((key, keyIndex) => {
                         const isSpecialKey = key === 'ENTER' || key === 'BACKSPACE';
-                        const keyColor = isWordle ? getKeyColor(letterStates[key]) : 'background.paper';
-                        const isColored = isWordle && letterStates[key];
+                        const keyColor = isBirdle ? getKeyColor(letterStates[key]) : 'background.paper';
+                        const isColored = isBirdle && letterStates[key];
 
                         return (
                             <Grid 
@@ -95,7 +95,7 @@ export const Keyboard: React.FC<KeyboardProps> = ({ onKeyPress, letterStates, va
                                             backgroundColor: isColored 
                                                 ? keyColor 
                                                 : 'action.hover',
-                                            // For wordle variant, maintain color but adjust opacity
+                                            // For Birdle variant, maintain color but adjust opacity
                                             opacity: isColored ? 0.9 : 1,
                                         },
                                         fontSize: {

@@ -8,11 +8,10 @@ import { Extension, HelpOutline } from '@mui/icons-material';
 import { ActiveClue } from './components/ActiveClue';
 import { GameStartScreen } from '../../components/GameStartScreen';
 import { gameColors } from '../../App';
-import { Keyboard } from '../wordle/components/Keyboard';
+import { Keyboard } from '../birdle/components/Keyboard';
 import { CrosswordHowToPlay } from './components/CrosswordHowToPlay';
 import { useHelp } from '../../contexts/HelpContext';
-// @ts-ignore
-const confetti = require('canvas-confetti');
+import confetti from 'canvas-confetti';
 
 // Placeholder puzzle data
 const INITIAL_BOARD: CrosswordCell[][] = [

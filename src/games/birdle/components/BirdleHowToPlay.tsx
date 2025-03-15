@@ -2,7 +2,7 @@ import { Box, Typography } from '@mui/material';
 import React from 'react';
 import { HowToPlayModal } from '../../../components/HowToPlayModal';
 
-interface WordleHowToPlayProps {
+interface BirdleHowToPlayProps {
     open: boolean;
     onClose: () => void;
 }
@@ -39,16 +39,16 @@ const ExampleTile: React.FC<{ letter: string; state: 'correct' | 'present' | 'ab
     );
 };
 
-export const WordleHowToPlay: React.FC<WordleHowToPlayProps> = ({ open, onClose }) => {
+export const BirdleHowToPlay: React.FC<BirdleHowToPlayProps> = ({ open, onClose }) => {
     return (
         <HowToPlayModal
             open={open}
             onClose={onClose}
-            title="How to Play Wordle"
+            title="How to Play Birdle"
         >
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
                 <Typography>
-                    Guess the word in 6 tries. After each guess, the color of the tiles will change to show how close your guess was to the word.
+                    Guess the bird-related word in 6 tries. After each guess, the color of the tiles will change to show how close your guess was to the word.
                 </Typography>
 
                 <Box>
@@ -58,40 +58,40 @@ export const WordleHowToPlay: React.FC<WordleHowToPlayProps> = ({ open, onClose 
                     
                     <Box sx={{ mb: 2 }}>
                         <Box sx={{ display: 'flex', mb: 1 }}>
-                            <ExampleTile letter="W" state="correct" />
-                            <ExampleTile letter="E" state="empty" />
-                            <ExampleTile letter="A" state="empty" />
-                            <ExampleTile letter="R" state="empty" />
-                            <ExampleTile letter="Y" state="empty" />
+                            <ExampleTile letter="F" state="correct" />
+                            <ExampleTile letter="I" state="empty" />
+                            <ExampleTile letter="N" state="empty" />
+                            <ExampleTile letter="C" state="empty" />
+                            <ExampleTile letter="H" state="empty" />
                         </Box>
                         <Typography>
-                            W is in the word and in the correct spot.
+                            F is in the word and in the correct spot.
                         </Typography>
                     </Box>
 
                     <Box sx={{ mb: 2 }}>
                         <Box sx={{ display: 'flex', mb: 1 }}>
                             <ExampleTile letter="P" state="empty" />
-                            <ExampleTile letter="I" state="present" />
-                            <ExampleTile letter="L" state="empty" />
-                            <ExampleTile letter="O" state="empty" />
-                            <ExampleTile letter="T" state="empty" />
+                            <ExampleTile letter="E" state="present" />
+                            <ExampleTile letter="R" state="empty" />
+                            <ExampleTile letter="C" state="empty" />
+                            <ExampleTile letter="H" state="empty" />
                         </Box>
                         <Typography>
-                            I is in the word but in the wrong spot.
+                            E is in the word but in the wrong spot.
                         </Typography>
                     </Box>
 
                     <Box sx={{ mb: 2 }}>
                         <Box sx={{ display: 'flex', mb: 1 }}>
-                            <ExampleTile letter="V" state="empty" />
-                            <ExampleTile letter="A" state="empty" />
-                            <ExampleTile letter="G" state="absent" />
-                            <ExampleTile letter="U" state="empty" />
-                            <ExampleTile letter="E" state="empty" />
+                            <ExampleTile letter="S" state="empty" />
+                            <ExampleTile letter="W" state="empty" />
+                            <ExampleTile letter="I" state="absent" />
+                            <ExampleTile letter="F" state="empty" />
+                            <ExampleTile letter="T" state="empty" />
                         </Box>
                         <Typography>
-                            G is not in the word in any spot.
+                            I is not in the word in any spot.
                         </Typography>
                     </Box>
                 </Box>

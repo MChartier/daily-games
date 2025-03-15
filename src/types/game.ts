@@ -1,5 +1,5 @@
 import { Cell } from '../games/sudoku/types';
-import { Guess } from '../games/wordle/types';
+import { Guess } from '../games/birdle/types';
 
 export type GameType = 'crossword' | 'sudoku' | 'birdle';
 

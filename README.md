@@ -33,7 +33,7 @@ A compact 5x5 crossword puzzle that challenges players with clever clues and int
 The classic number placement puzzle, featuring a clean interface and intuitive controls. Complete with note-taking functionality and helpful hints when you need them.
 
 ### Birdle
-A bird-themed word guessing game inspired by Wordle. Try to guess the 5-letter bird name in six attempts or less, with color-coded feedback to guide your choices.
+A bird-themed word guessing game inspired by Wordle. Try to guess the 5-letter bird term in six attempts or less, with color-coded feedback to guide your choices.
 
 ## 🚀 Getting Started
 

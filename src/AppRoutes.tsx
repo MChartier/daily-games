@@ -5,7 +5,7 @@ import { HomePage } from './pages/HomePage';
 import { ResultsPage } from './pages/ResultsPage';
 import { Crossword } from './games/crossword/Crossword';
 import { Sudoku } from './games/sudoku/Sudoku';
-import { Birdle } from './games/wordle/Birdle';
+import { Birdle } from './games/birdle/Birdle';
 
 export const AppRoutes: React.FC = () => {
     return (

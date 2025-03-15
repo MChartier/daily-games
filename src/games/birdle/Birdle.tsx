@@ -7,14 +7,37 @@ import { GameStartScreen } from '../../components/GameStartScreen';
 import { useHelp } from '../../contexts/HelpContext';
 import { GameBoard } from './components/GameBoard';
 import { Keyboard } from './components/Keyboard';
-import { WordleHowToPlay } from './components/WordleHowToPlay';
+import { BirdleHowToPlay } from './components/BirdleHowToPlay';
 import { GameState, Guess, Letter, LetterState } from './types';
 
-// Hardcoded list of 5-letter bird names
+// Hardcoded list of 5-letter bird terms
 const BIRD_WORDS = [
-    'EAGLE', 'ROBIN', 'SWIFT', 'CRANE', 'STORK',
-    'GOOSE', 'HERON',
-    'FINCH', 'STARL', 'RAVEN'
+    "EAGLE",
+    "RAVEN",
+    "ROBIN",
+    "HERON",
+    "FINCH",
+    "OWLET",
+    "PERCH",
+    "AVIAN",
+    "SWIFT",
+    "EGRET",
+    "STORK",
+    "CHICK",
+    "PREEN",
+    "ROOST",
+    "QUAIL",
+    "DRAKE",
+    "CREST",
+    "PLUME",
+    "TALON",
+    "DOWNY",
+    "FLIGHT",
+    "BROOD",
+    "CRANE",
+    "GREBE",
+    "GOOSE",
+    "TAWNY",
 ];
 
 const createEmptyGuess = (): Guess => ({
@@ -39,6 +62,7 @@ export const Birdle: React.FC = () => {
     const { showHelp, setShowHelp } = useHelp();
     const [gameState, setGameState] = useState<GameState>(createEmptyGame());
     const [letterStates, setLetterStates] = useState<Record<string, Letter['state']>>({});
+    const [isLosingReveal, setIsLosingReveal] = useState(false);
 
     const handleKeyPress = useCallback((key: string) => {
         if (gameState.isComplete) return;
@@ -141,7 +165,10 @@ export const Birdle: React.FC = () => {
                     hasWon: false
                 }));
 
-                // Wait a moment to show the final state, then navigate to results
+                // Show the losing animation first
+                setIsLosingReveal(true);
+
+                // Wait for the animation to complete, then navigate to results
                 setTimeout(() => {
                     const timeSpent = Math.floor((Date.now() - gameState.startTime) / 1000);
                     navigate('/results/birdle', {
@@ -233,121 +260,47 @@ export const Birdle: React.FC = () => {
     }
 
     return (
-        <Box 
-            sx={{
-                height: 'calc(100vh - 57px)',
-                display: 'flex',
-                flexDirection: 'column',
-                px: { xs: 1, sm: 2 },
-                py: { xs: 1, sm: 2 },
-                overflow: 'hidden',
-                position: 'relative',
-            }}
-        >
-            {/* How to Play Modal */}
-            <WordleHowToPlay
-                open={showHelp}
-                onClose={() => setShowHelp(false)}
-            />
-
-            {/* Desktop Help Button */}
-            {!isMobile && (
-                <IconButton
-                    onClick={() => setShowHelp(true)}
-                    size="large"
-                    sx={{ 
-                        position: 'absolute',
-                        top: 16,
-                        right: 16,
-                        color: 'text.primary',
-                        bgcolor: 'background.paper',
-                        boxShadow: 1,
-                        zIndex: 1,
-                        '&:hover': {
-                            bgcolor: 'background.paper',
-                            opacity: 0.9
-                        }
-                    }}
-                >
+        <Box sx={{ 
+            height: 'calc(100vh - 57px)',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            gap: 2,
+            p: 2
+        }}>
+            <Box sx={{ position: 'absolute', top: 8, right: 8 }}>
+                <IconButton onClick={() => setShowHelp(true)} color="primary">
                     <HelpOutline />
                 </IconButton>
-            )}
-
-            {/* Mobile Help Button in Header */}
-            {isMobile && (
-                <IconButton
-                    edge="end"
-                    sx={{
-                        position: 'fixed',
-                        top: 8,
-                        right: 16,
-                        color: 'white',
-                        zIndex: 1100,
-                    }}
-                    onClick={() => setShowHelp(true)}
-                >
-                    <HelpOutline />
-                </IconButton>
-            )}
-
-            {/* Game Container */}
-            <Box sx={{
-                width: '100%',
-                height: '100%',
-                maxWidth: { xs: '100%', sm: 'sm' },
-                mx: 'auto',
-                display: 'flex',
-                flexDirection: 'column',
-            }}>
-                {/* Game Content */}
-                <Box sx={{
-                    flex: 1,
-                    width: '100%',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    overflow: 'auto',
-                }}>
-                    {/* Game Board */}
-                    <Box sx={{
-                        width: '100%',
-                        maxWidth: { xs: '95vw', sm: '420px' },
-                        aspectRatio: '5/6',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        overflow: 'hidden',
-                    }}>
-                        <GameBoard 
-                            guesses={gameState.guesses}
-                            currentGuess={gameState.currentGuess}
-                            isWinningGuess={gameState.hasWon}
-                        />
-                    </Box>
-                </Box>
-
-                {/* Controls Section */}
-                <Box sx={{
-                    width: '100%',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                    px: { xs: 0.5, sm: 1 },
-                    py: { xs: 1, sm: 1.5 },
-                }}>
-                    <Box sx={{ 
-                        width: '100%',
-                        maxWidth: { xs: '100%', sm: '800px' }
-                    }}>
-                        <Keyboard
-                            onKeyPress={handleKeyPress}
-                            letterStates={letterStates}
-                            variant="wordle"
-                        />
-                    </Box>
-                </Box>
             </Box>
+
+            <Box sx={{ 
+                flex: 1,
+                width: '100%',
+                maxWidth: isMobile ? '100%' : '400px',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center'
+            }}>
+                <GameBoard 
+                    guesses={gameState.guesses} 
+                    currentGuess={gameState.currentGuess}
+                    isWinningGuess={gameState.hasWon}
+                    isLosingReveal={isLosingReveal}
+                />
+            </Box>
+
+            <Box sx={{ width: '100%', maxWidth: isMobile ? '100%' : '500px' }}>
+                <Keyboard 
+                    onKeyPress={handleKeyPress}
+                    letterStates={letterStates}
+                />
+            </Box>
+
+            <BirdleHowToPlay 
+                open={showHelp} 
+                onClose={() => setShowHelp(false)} 
+            />
         </Box>
     );
 }; 

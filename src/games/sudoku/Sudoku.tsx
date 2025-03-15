@@ -9,8 +9,7 @@ import { GameBoard } from './components/GameBoard';
 import { NumberPad } from './components/NumberPad';
 import { SudokuHowToPlay } from './components/SudokuHowToPlay';
 import { GameState } from './types';
-// @ts-ignore
-const confetti = require('canvas-confetti');
+import confetti from 'canvas-confetti';
 
 // Sample puzzle (0 represents empty cells)
 const SAMPLE_PUZZLE = [
