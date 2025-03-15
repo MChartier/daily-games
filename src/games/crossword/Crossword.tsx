@@ -209,12 +209,14 @@ export const Crossword: React.FC = () => {
         const { row, col } = gameState.selectedCell;
         const direction = gameState.activeClue?.direction || 'across';
 
-        if (key === ' ') {
+        // Handle space key to toggle direction
+        if (key === ' ' || key === 'SPACE') {
             toggleDirection(row, col);
             return;
         }
 
-        if (key === 'BACKSPACE') {
+        // Handle backspace/delete
+        if (key === 'BACKSPACE' || key === 'DELETE') {
             setGameState(prev => ({
                 ...prev,
                 board: prev.board.map((r, i) =>
@@ -225,7 +227,13 @@ export const Crossword: React.FC = () => {
                         : r
                 ),
             }));
-        } else if (/^[A-Z]$/.test(key)) {
+
+            // Don't move to previous cell, stay in current cell
+            return;
+        }
+
+        // Handle letter input
+        if (/^[A-Z]$/.test(key)) {
             const newLetter = key.toUpperCase();
             setGameState(prev => {
                 const newBoard = prev.board.map((r, i) =>
@@ -266,52 +274,81 @@ export const Crossword: React.FC = () => {
                     isComplete,
                 };
             });
-        } else if (key.startsWith('Arrow')) {
+        }
+        // Handle arrow keys
+        else if (key.startsWith('Arrow')) {
             let newRow = row;
             let newCol = col;
             let newDirection = direction;
 
             switch (key) {
                 case 'ArrowUp':
-                    newRow = Math.max(0, row - 1);
+                    newRow = row > 0 ? row - 1 : 4; // Wrap to bottom
                     newDirection = 'down';
                     break;
                 case 'ArrowDown':
-                    newRow = Math.min(4, row + 1);
+                    newRow = row < 4 ? row + 1 : 0; // Wrap to top
                     newDirection = 'down';
                     break;
                 case 'ArrowLeft':
-                    newCol = Math.max(0, col - 1);
+                    newCol = col > 0 ? col - 1 : 4; // Wrap to right edge
                     newDirection = 'across';
                     break;
                 case 'ArrowRight':
-                    newCol = Math.min(4, col + 1);
+                    newCol = col < 4 ? col + 1 : 0; // Wrap to left edge
                     newDirection = 'across';
                     break;
             }
 
-            const clueNumber = findClueFromCell(newRow, newCol, newDirection);
-            if (clueNumber) {
-                setGameState(prev => ({
-                    ...prev,
-                    selectedCell: { row: newRow, col: newCol },
-                    activeClue: { number: clueNumber, direction: newDirection },
-                }));
+            // Skip black cells with wrapping
+            let attempts = 0;
+            const maxAttempts = 25; // 5x5 board, maximum possible attempts
+            while (attempts < maxAttempts && gameState.board[newRow][newCol].isBlack) {
+                attempts++;
+                switch (key) {
+                    case 'ArrowUp':
+                        newRow = newRow > 0 ? newRow - 1 : 4;
+                        break;
+                    case 'ArrowDown':
+                        newRow = newRow < 4 ? newRow + 1 : 0;
+                        break;
+                    case 'ArrowLeft':
+                        newCol = newCol > 0 ? newCol - 1 : 4;
+                        break;
+                    case 'ArrowRight':
+                        newCol = newCol < 4 ? newCol + 1 : 0;
+                        break;
+                }
+            }
+
+            // Only update if we found a valid cell and haven't looped too many times
+            if (attempts < maxAttempts && !gameState.board[newRow][newCol].isBlack) {
+                const clueNumber = findClueFromCell(newRow, newCol, newDirection);
+                if (clueNumber) {
+                    setGameState(prev => ({
+                        ...prev,
+                        selectedCell: { row: newRow, col: newCol },
+                        activeClue: { number: clueNumber, direction: newDirection },
+                    }));
+                }
             }
         }
-    }, [gameState.selectedCell, gameState.activeClue?.direction, toggleDirection, getNextCell, getNextClue, findClueStart, findClueFromCell]);
+    }, [gameState.selectedCell, gameState.activeClue?.direction, gameState.board, toggleDirection, getNextCell, getNextClue, findClueStart, findClueFromCell]);
 
     // Handle physical keyboard events
     useEffect(() => {
         const handleKeyDown = (event: KeyboardEvent) => {
             if (event.key === 'Backspace' || event.key === 'Delete') {
-                handleKeyPress('BACKSPACE');
+                handleKeyPress(event.key.toUpperCase());
+            } else if (event.key === ' ') {
+                event.preventDefault(); // Prevent page scroll
+                handleKeyPress(' ');
+            } else if (event.key.startsWith('Arrow')) {
+                event.preventDefault();
+                handleKeyPress(event.key); // Pass the arrow key name as is
             } else {
                 const key = event.key.toUpperCase();
-                if (key === 'ENTER' || /^[A-Z]$/.test(key) || key.startsWith('Arrow')) {
-                    if (key.startsWith('Arrow')) {
-                        event.preventDefault();
-                    }
+                if (/^[A-Z]$/.test(key)) {
                     handleKeyPress(key);
                 }
             }
@@ -354,15 +391,15 @@ export const Crossword: React.FC = () => {
             justifyContent: 'center',
             cursor: 'pointer',
             backgroundColor: isSelected 
-                ? '#fff7d1'  // Light pastel yellow for selected
+                ? '#fff2b2'  // Slightly darker yellow for selected
                 : isActiveClue
-                    ? '#fff9e6'  // Very light yellow for active clue
+                    ? '#fff9e6'  // Light yellow for active clue
                     : '#ffffff',
             transition: 'all 0.2s ease',
             borderRadius: 0,
             '&:hover': {
                 backgroundColor: isSelected
-                    ? '#fff7d1'
+                    ? '#fff2b2'
                     : '#fffbe6',
             },
         };
