@@ -1,6 +1,6 @@
 import { Grid3x3, HelpOutline } from '@mui/icons-material';
 import { Box, IconButton, useMediaQuery, useTheme } from '@mui/material';
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { gameColors } from '../../App';
 import { GameStartScreen } from '../../components/GameStartScreen';
@@ -9,6 +9,8 @@ import { GameBoard } from './components/GameBoard';
 import { NumberPad } from './components/NumberPad';
 import { SudokuHowToPlay } from './components/SudokuHowToPlay';
 import { GameState } from './types';
+// @ts-ignore
+const confetti = require('canvas-confetti');
 
 // Sample puzzle (0 represents empty cells)
 const SAMPLE_PUZZLE = [
@@ -61,6 +63,7 @@ export const Sudoku: React.FC = () => {
     const [isNoteMode, setIsNoteMode] = useState(false);
     const [hintsUsed, setHintsUsed] = useState(0);
     const [errors, setErrors] = useState(0);
+    const [isAnimating, setIsAnimating] = useState(false);
     const [selectedCell, setSelectedCell] = useState<[number, number] | null>(null);
     const [board, setBoard] = useState<number[][]>(SAMPLE_PUZZLE);
 
@@ -71,8 +74,67 @@ export const Sudoku: React.FC = () => {
         }));
     };
 
+    const triggerCelebration = useCallback(() => {
+        setIsAnimating(true);
+        
+        // First burst of confetti from the center
+        confetti({
+            particleCount: 100,
+            spread: 70,
+            origin: { y: 0.6 }
+        });
+
+        // Second burst after a small delay
+        setTimeout(() => {
+            confetti({
+                particleCount: 50,
+                angle: 60,
+                spread: 55,
+                origin: { x: 0, y: 0.6 }
+            });
+            confetti({
+                particleCount: 50,
+                angle: 120,
+                spread: 55,
+                origin: { x: 1, y: 0.6 }
+            });
+        }, 200);
+
+        // Animate cells with a wave effect
+        for (let i = 0; i < 9; i++) {
+            for (let j = 0; j < 9; j++) {
+                const delay = (i + j) * 30; // Stagger the animation based on cell position
+                const cell = document.getElementById(`sudoku-cell-${i}-${j}`);
+                if (cell) {
+                    setTimeout(() => {
+                        cell.style.transform = 'scale(1.1)';
+                        cell.style.backgroundColor = theme.palette.primary.light;
+                        setTimeout(() => {
+                            cell.style.transform = 'scale(1)';
+                            cell.style.backgroundColor = '';
+                        }, 300);
+                    }, delay);
+                }
+            }
+        }
+
+        // Navigate to results after animation
+        setTimeout(() => {
+            setIsAnimating(false);
+            const endTime = Date.now();
+            navigate('/results/sudoku', {
+                state: {
+                    timeSpent: Math.floor((endTime - gameState.startTime) / 1000),
+                    difficulty: gameState.difficulty,
+                    hintsUsed,
+                    errors
+                }
+            });
+        }, 1500);
+    }, [navigate, gameState.startTime, gameState.difficulty, hintsUsed, errors, theme.palette.primary.light]);
+
     const handleNumberClick = (number: number) => {
-        if (!gameState.selectedCell) return;
+        if (!gameState.selectedCell || isAnimating) return;
         const { row, col } = gameState.selectedCell;
         const cell = gameState.board[row][col];
         if (cell.state === 'initial') return;
@@ -88,23 +150,15 @@ export const Sudoku: React.FC = () => {
             row.every((cell, j) => cell.value === gameState.solution[i][j])
         );
 
-        if (isComplete) {
-            const endTime = Date.now();
-            navigate('/results/sudoku', {
-                state: {
-                    timeSpent: Math.floor((endTime - gameState.startTime) / 1000),
-                    difficulty: gameState.difficulty,
-                    hintsUsed,
-                    errors
-                }
-            });
-        }
-
         setGameState(prev => ({
             ...prev,
             board: newBoard,
             isComplete
         }));
+
+        if (isComplete) {
+            triggerCelebration();
+        }
     };
 
     const handleNoteClick = (number: number) => {
@@ -325,6 +379,7 @@ export const Sudoku: React.FC = () => {
                             onNumberInput={handleNumberClick}
                             onDelete={handleErase}
                             onArrowKey={handleArrowKey}
+                            isAnimating={isAnimating}
                         />
                     </Box>
                 </Box>

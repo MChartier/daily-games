@@ -11,6 +11,8 @@ import { gameColors } from '../../App';
 import { Keyboard } from '../wordle/components/Keyboard';
 import { CrosswordHowToPlay } from './components/CrosswordHowToPlay';
 import { useHelp } from '../../contexts/HelpContext';
+// @ts-ignore
+const confetti = require('canvas-confetti');
 
 // Placeholder puzzle data
 const INITIAL_BOARD: CrosswordCell[][] = [
@@ -110,6 +112,7 @@ export const Crossword: React.FC = () => {
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
     const [gameStarted, setGameStarted] = useState(false);
     const { showHelp, setShowHelp } = useHelp();
+    const [isAnimating, setIsAnimating] = useState(false);
     const [gameState, setGameState] = useState<GameState>({
         board: INITIAL_BOARD,
         clues: INITIAL_CLUES,
@@ -358,21 +361,71 @@ export const Crossword: React.FC = () => {
         return () => window.removeEventListener('keydown', handleKeyDown);
     }, [handleKeyPress]);
 
-    useEffect(() => {
-        // Check if puzzle is complete and update stats
-        if (gameState.isComplete && !gameState.endTime) {
-            const endTime = Date.now();
-            setGameState(prev => ({ ...prev, endTime }));
-            
+    const triggerCelebration = useCallback(() => {
+        setIsAnimating(true);
+        
+        // First burst of confetti from the center
+        confetti({
+            particleCount: 100,
+            spread: 70,
+            origin: { y: 0.6 }
+        });
+
+        // Second burst after a small delay
+        setTimeout(() => {
+            confetti({
+                particleCount: 50,
+                angle: 60,
+                spread: 55,
+                origin: { x: 0, y: 0.6 }
+            });
+            confetti({
+                particleCount: 50,
+                angle: 120,
+                spread: 55,
+                origin: { x: 1, y: 0.6 }
+            });
+        }, 200);
+
+        // Animate cells with a wave effect
+        for (let i = 0; i < 5; i++) {
+            for (let j = 0; j < 5; j++) {
+                const delay = (i + j) * 50; // Stagger the animation based on cell position
+                const cell = document.getElementById(`cell-${i}-${j}`);
+                if (cell) {
+                    setTimeout(() => {
+                        cell.style.transform = 'scale(1.1)';
+                        cell.style.backgroundColor = '#fff2b2';
+                        setTimeout(() => {
+                            cell.style.transform = 'scale(1)';
+                            cell.style.backgroundColor = '#ffffff';
+                        }, 300);
+                    }, delay);
+                }
+            }
+        }
+
+        // Navigate to results after animation
+        setTimeout(() => {
+            setIsAnimating(false);
             navigate('/results/crossword', {
                 state: {
-                    timeSpent: Math.floor((endTime - gameState.startTime) / 1000),
+                    timeSpent: Math.floor((Date.now() - gameState.startTime) / 1000),
                     isComplete: true,
                     date: new Date().toISOString(),
                 }
             });
+        }, 1500);
+    }, [navigate, gameState.startTime]);
+
+    useEffect(() => {
+        // Check if puzzle is complete and update stats
+        if (gameState.isComplete && !gameState.endTime && !isAnimating) {
+            const endTime = Date.now();
+            setGameState(prev => ({ ...prev, endTime }));
+            triggerCelebration();
         }
-    }, [gameState.isComplete, gameState.endTime, gameState.startTime, navigate]);
+    }, [gameState.isComplete, gameState.endTime, gameState.startTime, isAnimating, triggerCelebration]);
 
     const getCellStyle = (row: number, col: number) => {
         const isSelected = gameState.selectedCell?.row === row && gameState.selectedCell?.col === col;
@@ -607,8 +660,10 @@ export const Crossword: React.FC = () => {
                                     {gameState.board.map((row, i) =>
                                         row.map((cell, j) => (
                                             <Box
+                                                id={`cell-${i}-${j}`}
                                                 key={`${i}-${j}`}
                                                 onClick={() => {
+                                                    if (isAnimating) return; // Prevent interaction during animation
                                                     const currentDirection = gameState.activeClue?.direction || 'across';
                                                     
                                                     // If clicking the same cell, toggle direction
@@ -637,6 +692,7 @@ export const Crossword: React.FC = () => {
                                                 sx={{
                                                     ...getCellStyle(i, j),
                                                     borderRadius: 0,
+                                                    transition: 'all 0.3s ease',
                                                 }}
                                             >
                                                 {cell.number && (

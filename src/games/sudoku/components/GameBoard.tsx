@@ -10,6 +10,7 @@ interface GameBoardProps {
     onNumberInput?: (number: number) => void;
     onDelete?: () => void;
     onArrowKey?: (direction: 'up' | 'down' | 'left' | 'right') => void;
+    isAnimating?: boolean;
 }
 
 export const GameBoard: React.FC<GameBoardProps> = ({
@@ -18,13 +19,14 @@ export const GameBoard: React.FC<GameBoardProps> = ({
     onCellClick,
     onNumberInput,
     onDelete,
-    onArrowKey
+    onArrowKey,
+    isAnimating = false
 }) => {
     const boardRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
         const handleKeyDown = (e: KeyboardEvent) => {
-            if (!boardRef.current?.contains(document.activeElement)) return;
+            if (!boardRef.current?.contains(document.activeElement) || isAnimating) return;
 
             // Handle number inputs (both number row and numpad)
             if ((e.key >= '1' && e.key <= '9') || (e.key >= 'Numpad1' && e.key <= 'Numpad9')) {
@@ -47,7 +49,7 @@ export const GameBoard: React.FC<GameBoardProps> = ({
 
         document.addEventListener('keydown', handleKeyDown);
         return () => document.removeEventListener('keydown', handleKeyDown);
-    }, [onNumberInput, onDelete, onArrowKey]);
+    }, [onNumberInput, onDelete, onArrowKey, isAnimating]);
 
     return (
         <Box 
@@ -105,8 +107,9 @@ export const GameBoard: React.FC<GameBoardProps> = ({
 
                         return (
                             <Box
+                                id={`sudoku-cell-${rowIndex}-${colIndex}`}
                                 key={`${rowIndex}-${colIndex}`}
-                                onClick={() => !isInitial && onCellClick(rowIndex, colIndex)}
+                                onClick={() => !isInitial && !isAnimating && onCellClick(rowIndex, colIndex)}
                                 sx={{
                                     position: 'relative',
                                     width: '100%',
@@ -119,9 +122,10 @@ export const GameBoard: React.FC<GameBoardProps> = ({
                                         : isInSelectedBox
                                             ? alpha(theme.palette.primary.main, 0.04)
                                             : '#ffffff',
-                                    cursor: isInitial ? 'default' : 'pointer',
+                                    cursor: isInitial || isAnimating ? 'default' : 'pointer',
                                     userSelect: 'none',
-                                    '&:hover': !isInitial ? {
+                                    transition: 'all 0.3s ease',
+                                    '&:hover': !isInitial && !isAnimating ? {
                                         bgcolor: (theme) => isSelected 
                                             ? alpha(theme.palette.primary.main, 0.12)
                                             : alpha(theme.palette.primary.main, 0.08),

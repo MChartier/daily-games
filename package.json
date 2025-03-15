@@ -15,6 +15,7 @@
     "@types/node": "^16.18.126",
     "@types/react": "^19.0.10",
     "@types/react-dom": "^19.0.4",
+    "canvas-confetti": "^1.9.3",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-router-dom": "^7.3.0",
@@ -51,6 +52,7 @@
   "homepage": "https://mchartier.github.io/daily-games",
   "devDependencies": {
     "@mui/types": "^7.2.21",
+    "@types/canvas-confetti": "^1.9.0",
     "gh-pages": "^6.3.0"
   }
 }
