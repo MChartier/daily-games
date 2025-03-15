@@ -167,6 +167,58 @@ export const Sudoku: React.FC = () => {
         }));
     };
 
+    const handleArrowKey = (direction: 'up' | 'down' | 'left' | 'right') => {
+        if (!gameState.selectedCell) return;
+        
+        const { row, col } = gameState.selectedCell;
+        let newRow = row;
+        let newCol = col;
+
+        switch (direction) {
+            case 'up':
+                newRow = row > 0 ? row - 1 : 8;
+                break;
+            case 'down':
+                newRow = row < 8 ? row + 1 : 0;
+                break;
+            case 'left':
+                newCol = col > 0 ? col - 1 : 8;
+                break;
+            case 'right':
+                newCol = col < 8 ? col + 1 : 0;
+                break;
+        }
+
+        // Skip initial cells
+        while (gameState.board[newRow][newCol].state === 'initial') {
+            switch (direction) {
+                case 'up':
+                    newRow = newRow > 0 ? newRow - 1 : 8;
+                    break;
+                case 'down':
+                    newRow = newRow < 8 ? newRow + 1 : 0;
+                    break;
+                case 'left':
+                    newCol = newCol > 0 ? newCol - 1 : 8;
+                    break;
+                case 'right':
+                    newCol = newCol < 8 ? newCol + 1 : 0;
+                    break;
+            }
+            
+            // If we've wrapped around to the original position, break to avoid infinite loop
+            if (newRow === row && newCol === col) break;
+        }
+
+        // Only update if we found a non-initial cell
+        if (gameState.board[newRow][newCol].state !== 'initial') {
+            setGameState(prev => ({
+                ...prev,
+                selectedCell: { row: newRow, col: newCol }
+            }));
+        }
+    };
+
     if (!gameStarted) {
         return (
             <Box sx={{ height: 'calc(100vh - 57px)' }}>
@@ -270,6 +322,9 @@ export const Sudoku: React.FC = () => {
                             board={gameState.board}
                             selectedCell={gameState.selectedCell}
                             onCellClick={handleCellClick}
+                            onNumberInput={handleNumberClick}
+                            onDelete={handleErase}
+                            onArrowKey={handleArrowKey}
                         />
                     </Box>
                 </Box>

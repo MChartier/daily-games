@@ -59,23 +59,6 @@ export const CrosswordHowToPlay: React.FC<CrosswordHowToPlayProps> = ({ open, on
                     </List>
                 </Box>
 
-                <Box>
-                    <Typography variant="subtitle1" fontWeight="bold" gutterBottom>
-                        Tips:
-                    </Typography>
-                    <List sx={{ listStyleType: 'disc', pl: 2 }}>
-                        <ListItem sx={{ display: 'list-item' }}>
-                            <ListItemText primary="Letters are automatically capitalized" />
-                        </ListItem>
-                        <ListItem sx={{ display: 'list-item' }}>
-                            <ListItemText primary="The active clue is always visible at the top" />
-                        </ListItem>
-                        <ListItem sx={{ display: 'list-item' }}>
-                            <ListItemText primary="Completed words will be highlighted in green" />
-                        </ListItem>
-                    </List>
-                </Box>
-
                 <Typography>
                     A new puzzle will be available each day. Good luck!
                 </Typography>

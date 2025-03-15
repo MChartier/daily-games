@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { Box, Typography } from '@mui/material';
 import { Cell } from '../types';
 import { alpha } from '@mui/material/styles';
@@ -7,22 +7,65 @@ interface GameBoardProps {
     board: Cell[][];
     selectedCell: { row: number; col: number } | null;
     onCellClick: (row: number, col: number) => void;
+    onNumberInput?: (number: number) => void;
+    onDelete?: () => void;
+    onArrowKey?: (direction: 'up' | 'down' | 'left' | 'right') => void;
 }
 
 export const GameBoard: React.FC<GameBoardProps> = ({
     board,
     selectedCell,
-    onCellClick
+    onCellClick,
+    onNumberInput,
+    onDelete,
+    onArrowKey
 }) => {
+    const boardRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if (!boardRef.current?.contains(document.activeElement)) return;
+
+            // Handle number inputs (both number row and numpad)
+            if ((e.key >= '1' && e.key <= '9') || (e.key >= 'Numpad1' && e.key <= 'Numpad9')) {
+                const num = parseInt(e.key.replace('Numpad', ''), 10);
+                onNumberInput?.(num);
+                e.preventDefault();
+            }
+            // Handle delete and backspace
+            else if (e.key === 'Delete' || e.key === 'Backspace') {
+                onDelete?.();
+                e.preventDefault();
+            }
+            // Handle arrow keys
+            else if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.key)) {
+                const direction = e.key.replace('Arrow', '').toLowerCase() as 'up' | 'down' | 'left' | 'right';
+                onArrowKey?.(direction);
+                e.preventDefault();
+            }
+        };
+
+        document.addEventListener('keydown', handleKeyDown);
+        return () => document.removeEventListener('keydown', handleKeyDown);
+    }, [onNumberInput, onDelete, onArrowKey]);
+
     return (
-        <Box sx={{
-            position: 'relative',
-            width: '100%',
-            aspectRatio: '1/1',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-        }}>
+        <Box 
+            ref={boardRef}
+            tabIndex={0} // Make the board focusable
+            sx={{
+                position: 'relative',
+                width: '100%',
+                aspectRatio: '1/1',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                outline: 'none', // Remove focus outline
+                '&:focus': {
+                    outline: 'none',
+                },
+            }}
+        >
             <Box sx={{
                 position: 'relative',
                 width: '100%',
