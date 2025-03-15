@@ -1,4 +1,4 @@
-import { Grid4x4, HelpOutline } from '@mui/icons-material';
+import { Grid3x3, HelpOutline } from '@mui/icons-material';
 import { Box, IconButton, useMediaQuery, useTheme } from '@mui/material';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -172,7 +172,7 @@ export const Sudoku: React.FC = () => {
             <Box sx={{ height: 'calc(100vh - 57px)' }}>
                 <GameStartScreen
                     title="Sudoku"
-                    icon={<Grid4x4 />}
+                    icon={<Grid3x3 />}
                     color={gameColors.sudoku}
                     onStart={() => setGameStarted(true)}
                     gameType="sudoku"

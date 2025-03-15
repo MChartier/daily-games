@@ -2,7 +2,7 @@ import {
     Close as CloseIcon,
     Extension,
     FlutterDash,
-    Grid4x4,
+    Grid3x3,
     Menu as MenuIcon,
     Psychology
 } from '@mui/icons-material';
@@ -29,7 +29,7 @@ import { useHelp } from '../contexts/HelpContext';
 
 const games = [
     { id: 'crossword', name: 'Crossword', icon: <Extension /> },
-    { id: 'sudoku', name: 'Sudoku', icon: <Grid4x4 /> },
+    { id: 'sudoku', name: 'Sudoku', icon: <Grid3x3 /> },
     { id: 'birdle', name: 'Birdle', icon: <FlutterDash sx={{ transform: 'scaleX(-1)' }} /> }
 ];
 
@@ -49,7 +49,7 @@ export const Header: React.FC = () => {
     const currentGame = getCurrentGame();
 
     const handleGameClick = (gameId: string) => {
-        navigate(`/daily-games/${gameId}`);
+        navigate(`${gameId}`);
         if (isMobile) {
             setDrawerOpen(false);
         }
@@ -184,7 +184,7 @@ export const Header: React.FC = () => {
                                     cursor: currentGame ? 'default' : 'pointer',
                                     flex: 1,
                                 }}
-                                onClick={() => !currentGame && navigate('/daily-games')}
+                                onClick={() => !currentGame && navigate('/')}
                             >
                                 {currentGame ? currentGame.icon : <Psychology />}
                                 <Typography 

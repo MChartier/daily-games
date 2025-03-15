@@ -1,6 +1,6 @@
 import React from 'react';
 import { Card, CardContent, CardActionArea, Typography, Box, Avatar, useTheme, useMediaQuery } from '@mui/material';
-import { CheckCircle, Grid4x4, FlutterDash, GridOn } from '@mui/icons-material';
+import { CheckCircle, Grid3x3, FlutterDash, GridOn } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import { GameInfo, GameType } from '../types/game';
 import { gameColors } from '../App';
@@ -14,7 +14,7 @@ const getGameIcon = (gameType: GameType) => {
         case 'crossword':
             return <GridOn />;
         case 'sudoku':
-            return <Grid4x4 />;
+            return <Grid3x3 />;
         case 'birdle':
             return <FlutterDash sx={{ transform: 'scaleX(-1)' }} />;
         default:
