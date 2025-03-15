@@ -1,7 +1,7 @@
 import { FlutterDash, HelpOutline } from '@mui/icons-material';
 import { Box, IconButton, useMediaQuery, useTheme } from '@mui/material';
-import React, { useEffect, useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import React, { useCallback, useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { gameColors } from '../../App';
 import { GameStartScreen } from '../../components/GameStartScreen';
 import { useHelp } from '../../contexts/HelpContext';
@@ -34,14 +34,13 @@ const createEmptyGame = (): GameState => ({
 export const Birdle: React.FC = () => {
     const theme = useTheme();
     const navigate = useNavigate();
-    const location = useLocation();
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
     const [gameStarted, setGameStarted] = useState(false);
     const { showHelp, setShowHelp } = useHelp();
     const [gameState, setGameState] = useState<GameState>(createEmptyGame());
     const [letterStates, setLetterStates] = useState<Record<string, Letter['state']>>({});
 
-    const handleKeyPress = (key: string) => {
+    const handleKeyPress = useCallback((key: string) => {
         if (gameState.isComplete) return;
 
         const currentGuess = gameState.guesses[gameState.currentGuess];
@@ -88,7 +87,7 @@ export const Birdle: React.FC = () => {
                 // Wait a moment to show the completed board, then navigate to results
                 setTimeout(() => {
                     const timeSpent = Math.floor((Date.now() - gameState.startTime) / 1000);
-                    navigate('/daily-games/results/birdle', {
+                    navigate('/results/birdle', {
                         state: {
                             gameType: 'birdle',
                             won: true,
@@ -119,7 +118,7 @@ export const Birdle: React.FC = () => {
             });
 
             // Second pass: Mark present letters
-            newLetters.forEach((letter, index) => {
+            newLetters.forEach((letter) => {
                 if (letter.state !== 'correct' && remainingLetters[letter.value] > 0) {
                     letter.state = 'present';
                     remainingLetters[letter.value]--;
@@ -145,7 +144,7 @@ export const Birdle: React.FC = () => {
                 // Wait a moment to show the final state, then navigate to results
                 setTimeout(() => {
                     const timeSpent = Math.floor((Date.now() - gameState.startTime) / 1000);
-                    navigate('/daily-games/results/birdle', {
+                    navigate('/results/birdle', {
                         state: {
                             gameType: 'birdle',
                             won: false,
@@ -181,7 +180,7 @@ export const Birdle: React.FC = () => {
                 }));
             }
         }
-    };
+    }, [gameState.answer, gameState.currentGuess, gameState.guesses, gameState.isComplete, gameState.startTime, navigate]);
 
     useEffect(() => {
         const handleKeyDown = (event: KeyboardEvent) => {
@@ -204,7 +203,7 @@ export const Birdle: React.FC = () => {
         gameState.guesses.forEach((guess, rowIndex) => {
             // Only process completed guesses that are not the current row
             if (guess.isComplete && rowIndex < gameState.currentGuess) {
-                guess.letters.forEach((letter, index) => {
+                guess.letters.forEach((letter) => {
                     if (letter.value) {
                         const currentState = newLetterStates[letter.value];
                         if (!currentState || 
