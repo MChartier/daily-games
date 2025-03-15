@@ -7,24 +7,22 @@ A modern, responsive web application featuring a collection of daily word and nu
 ## 📸 Screenshots
 
 ### Home Screen
-![Daily Games Home](docs/images/home.png)
+![Daily Games Home](./docs/images/home.png)
 *The main dashboard showcasing all available games with their beautiful card layouts*
 
 ### Games in Action
-<div style="display: flex; gap: 10px; margin-bottom: 20px;">
-    <div style="flex: 1;">
-        <img src="docs/images/crossword.png" alt="Crossword Game" style="width: 100%;">
-        <em>Crossword - A compact 5x5 puzzle</em>
-    </div>
-    <div style="flex: 1;">
-        <img src="docs/images/sudoku.png" alt="Sudoku Game" style="width: 100%;">
-        <em>Sudoku - Classic number puzzle</em>
-    </div>
-    <div style="flex: 1;">
-        <img src="docs/images/birdle.png" alt="Birdle Game" style="width: 100%;">
-        <em>Birdle - Bird-themed word game</em>
-    </div>
-</div>
+
+#### Crossword
+![Crossword Game](./docs/images/crossword.png)
+*A compact 5x5 puzzle with clever clues and interconnected answers*
+
+#### Sudoku
+![Sudoku Game](./docs/images/sudoku.png)
+*Classic number puzzle with intuitive controls and note-taking*
+
+#### Birdle
+![Birdle Game](./docs/images/birdle.png)
+*Bird-themed word game with color-coded feedback*
 
 ## 🎮 Featured Games
 
