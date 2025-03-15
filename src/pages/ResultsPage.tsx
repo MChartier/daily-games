@@ -105,7 +105,7 @@ export const ResultsPage: React.FC = () => {
                 <Button
                     variant="outlined"
                     startIcon={<Home />}
-                    onClick={() => navigate('/')}
+                    onClick={() => navigate('/daily-games')}
                 >
                     Back to Games
                 </Button>

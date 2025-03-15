@@ -16,7 +16,7 @@ export const gameColors = {
 
 export const App: React.FC = () => {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename="/daily-games">
       <ThemeProvider theme={theme}>
         <CssBaseline />
         <HelpProvider>

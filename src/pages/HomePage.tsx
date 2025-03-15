@@ -9,21 +9,21 @@ const games: GameInfo[] = [
         title: 'Crossword',
         description: 'Challenge yourself with our daily crossword puzzle. Test your vocabulary and wit.',
         completed: false,
-        path: '/games/crossword'
+        path: '/daily-games/crossword'
     },
     {
         id: 'sudoku',
         title: 'Sudoku',
         description: 'Exercise your brain with our daily number puzzle. Logic and strategy combined.',
         completed: false,
-        path: '/games/sudoku'
+        path: '/daily-games/sudoku'
     },
     {
         id: 'birdle',
         title: 'Birdle',
         description: 'Guess the hidden bird species in six tries. A new feathered friend each day.',
         completed: false,
-        path: '/games/birdle'
+        path: '/daily-games/birdle'
     }
 ];
 

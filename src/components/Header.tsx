@@ -43,14 +43,14 @@ export const Header: React.FC = () => {
     const { setShowHelp } = useHelp();
 
     const getCurrentGame = () => {
-        const path = location.pathname.split('/')[2]; // games/[gameId]
+        const path = location.pathname.split('/')[2]; // daily-games/[gameId]
         return games.find(game => game.id === path);
     };
 
     const currentGame = getCurrentGame();
 
     const handleGameClick = (gameId: string) => {
-        navigate(`/games/${gameId}`);
+        navigate(`/daily-games/${gameId}`);
         if (isMobile) {
             setDrawerOpen(false);
         }
@@ -185,7 +185,7 @@ export const Header: React.FC = () => {
                                     cursor: currentGame ? 'default' : 'pointer',
                                     flex: 1,
                                 }}
-                                onClick={() => !currentGame && navigate('/')}
+                                onClick={() => !currentGame && navigate('/daily-games')}
                             >
                                 {currentGame ? currentGame.icon : <Psychology />}
                                 <Typography 
@@ -206,7 +206,7 @@ export const Header: React.FC = () => {
                                     color: 'white',
                                     cursor: 'pointer'
                                 }}
-                                onClick={() => navigate('/')}
+                                onClick={() => navigate('/daily-games')}
                             >
                                 <Psychology />
                                 <Typography 

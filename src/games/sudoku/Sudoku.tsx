@@ -92,7 +92,7 @@ export const Sudoku: React.FC = () => {
 
         if (isComplete) {
             const endTime = Date.now();
-            navigate('/results/sudoku', {
+            navigate('/daily-games/results/sudoku', {
                 state: {
                     timeSpent: Math.floor((endTime - gameState.startTime) / 1000),
                     difficulty: gameState.difficulty,

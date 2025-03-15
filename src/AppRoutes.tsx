@@ -12,10 +12,11 @@ export const AppRoutes: React.FC = () => {
         <Box component="main" sx={{ flex: 1 }}>
             <Routes>
                 <Route path="/" element={<HomePage />} />
-                <Route path="/games/crossword" element={<Crossword />} />
-                <Route path="/games/sudoku" element={<Sudoku />} />
-                <Route path="/games/birdle" element={<Birdle />} />
-                <Route path="/results/:gameId" element={<ResultsPage />} />
+                <Route path="/daily-games" element={<HomePage />} />
+                <Route path="/daily-games/crossword" element={<Crossword />} />
+                <Route path="/daily-games/sudoku" element={<Sudoku />} />
+                <Route path="/daily-games/birdle" element={<Birdle />} />
+                <Route path="/daily-games/results/:gameId" element={<ResultsPage />} />
             </Routes>
         </Box>
     );

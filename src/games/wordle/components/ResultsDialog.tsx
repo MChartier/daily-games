@@ -83,7 +83,7 @@ export const ResultsDialog: React.FC<ResultsDialogProps> = ({
             <DialogActions sx={{ p: 3, pt: 0 }}>
                 <Button
                     variant="outlined"
-                    onClick={() => navigate('/')}
+                    onClick={() => navigate('/daily-games')}
                     sx={{ flex: 1 }}
                 >
                     Back to Home

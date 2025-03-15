@@ -88,7 +88,7 @@ export const Birdle: React.FC = () => {
                 // Wait a moment to show the completed board, then navigate to results
                 setTimeout(() => {
                     const timeSpent = Math.floor((Date.now() - gameState.startTime) / 1000);
-                    navigate('/results/birdle', {
+                    navigate('/daily-games/results/birdle', {
                         state: {
                             gameType: 'birdle',
                             won: true,
@@ -145,7 +145,7 @@ export const Birdle: React.FC = () => {
                 // Wait a moment to show the final state, then navigate to results
                 setTimeout(() => {
                     const timeSpent = Math.floor((Date.now() - gameState.startTime) / 1000);
-                    navigate('/results/birdle', {
+                    navigate('/daily-games/results/birdle', {
                         state: {
                             gameType: 'birdle',
                             won: false,
