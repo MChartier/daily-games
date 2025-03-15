@@ -205,7 +205,7 @@ export const Header: React.FC = () => {
                                     color: 'white',
                                     cursor: 'pointer'
                                 }}
-                                onClick={() => navigate('/daily-games')}
+                                onClick={() => navigate('/')}
                             >
                                 <Psychology />
                                 <Typography 
