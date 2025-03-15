@@ -79,9 +79,10 @@ export const HomePage: React.FC = () => {
                     <Grid 
                         container 
                         rowSpacing={2}
+                        columnSpacing={2}
                         sx={{ 
                             maxWidth: 'md',
-                            mx: 'auto',
+                            
                             mb: { xs: 2, sm: 3 }
                         }}
                     >
