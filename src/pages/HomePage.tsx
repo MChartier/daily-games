@@ -76,40 +76,44 @@ export const HomePage: React.FC = () => {
                     </Typography>
 
                     {/* Game Buttons */}
-                    <Grid 
-                        container 
-                        rowSpacing={2}
-                        columnSpacing={2}
-                        sx={{ 
-                            maxWidth: 'md',
-                            
-                            mb: { xs: 2, sm: 3 }
-                        }}
-                    >
-                        {games.map((game) => (
-                            <Grid item xs={12} sm={4} key={game.id}>
-                                <Button
-                                    variant="contained"
-                                    size="large"
-                                    fullWidth
-                                    startIcon={game.icon}
-                                    onClick={() => navigate(game.path)}
-                                    sx={{
-                                        bgcolor: game.color,
-                                        '&:hover': {
-                                            bgcolor: theme.palette.mode === 'light' 
-                                                ? `${game.color}dd`
-                                                : `${game.color}bb`,
-                                        },
-                                        py: { xs: 1.5, sm: 2 },
-                                        borderRadius: 2,
-                                    }}
-                                >
-                                    {game.title}
-                                </Button>
-                            </Grid>
-                        ))}
-                    </Grid>
+                    <Box sx={{ 
+                        maxWidth: 'md',
+                        mx: 'auto',
+                        px: { xs: 2, sm: 0 }
+                    }}>
+                        <Grid 
+                            container 
+                            spacing={2}
+                            sx={{ 
+                                mb: { xs: 2, sm: 3 },
+                                justifyContent: 'center',
+                            }}
+                        >
+                            {games.map((game) => (
+                                <Grid item xs={12} sm={4} key={game.id}>
+                                    <Button
+                                        variant="contained"
+                                        size="large"
+                                        fullWidth
+                                        startIcon={game.icon}
+                                        onClick={() => navigate(game.path)}
+                                        sx={{
+                                            bgcolor: game.color,
+                                            '&:hover': {
+                                                bgcolor: theme.palette.mode === 'light' 
+                                                    ? `${game.color}dd`
+                                                    : `${game.color}bb`,
+                                            },
+                                            py: { xs: 1.5, sm: 2 },
+                                            borderRadius: 2,
+                                        }}
+                                    >
+                                        {game.title}
+                                    </Button>
+                                </Grid>
+                            ))}
+                        </Grid>
+                    </Box>
                 </Container>
             </Box>
 
