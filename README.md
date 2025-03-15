@@ -1,46 +1,121 @@
-# Getting Started with Create React App
+# Daily Games
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A modern, responsive web application featuring a collection of daily word and number puzzles. Built with React, TypeScript, and Material-UI, this project showcases clean design and engaging gameplay while serving as an experimental exercise in AI-assisted development.
 
-## Available Scripts
+🎮 **[Play Daily Games](https://mchartier.github.io/daily-games)** - Try it out on GitHub Pages!
 
-In the project directory, you can run:
+## 📸 Screenshots
 
-### `npm start`
+### Home Screen
+![Daily Games Home](docs/images/home.png)
+*The main dashboard showcasing all available games with their beautiful card layouts*
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+### Games in Action
+<div style="display: flex; gap: 10px; margin-bottom: 20px;">
+    <div style="flex: 1;">
+        <img src="docs/images/crossword.png" alt="Crossword Game" style="width: 100%;">
+        <em>Crossword - A compact 5x5 puzzle</em>
+    </div>
+    <div style="flex: 1;">
+        <img src="docs/images/sudoku.png" alt="Sudoku Game" style="width: 100%;">
+        <em>Sudoku - Classic number puzzle</em>
+    </div>
+    <div style="flex: 1;">
+        <img src="docs/images/birdle.png" alt="Birdle Game" style="width: 100%;">
+        <em>Birdle - Bird-themed word game</em>
+    </div>
+</div>
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+## 🎮 Featured Games
 
-### `npm test`
+### Crossword
+A compact 5x5 crossword puzzle that challenges players with clever clues and interconnected answers. Perfect for a quick mental workout during your coffee break.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### Sudoku
+The classic number placement puzzle, featuring a clean interface and intuitive controls. Complete with note-taking functionality and helpful hints when you need them.
 
-### `npm run build`
+### Birdle
+A bird-themed word guessing game inspired by Wordle. Try to guess the 5-letter bird name in six attempts or less, with color-coded feedback to guide your choices.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## 🚀 Getting Started
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### Prerequisites
+- Node.js (v14 or higher)
+- npm or yarn
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### Installation
 
-### `npm run eject`
+1. Clone the repository:
+```bash
+git clone https://github.com/yourusername/daily-games.git
+cd daily-games
+```
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+2. Install dependencies:
+```bash
+npm install
+# or
+yarn install
+```
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+3. Start the development server:
+```bash
+npm start
+# or
+yarn start
+```
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+4. Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+## 🛠️ Built With
 
-## Learn More
+- [React](https://reactjs.org/) - Frontend framework
+- [TypeScript](https://www.typescriptlang.org/) - Type safety and enhanced developer experience
+- [Material-UI](https://mui.com/) - UI component library
+- [React Router](https://reactrouter.com/) - Navigation and routing
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## 🤖 AI-Assisted Development
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+This project serves as an experimental exercise in leveraging AI code generation tools to rapidly prototype and iterate on new ideas. The development process utilized:
+
+- **Claude AI** - For generating initial component structures and game logic
+- **GitHub Copilot** - For real-time code suggestions and completions
+- **Cursor IDE** - For AI-powered code editing and refactoring
+
+The AI-assisted approach allowed for:
+
+- Rapid prototyping of game mechanics
+- Quick iteration on UI/UX designs
+- Efficient problem-solving for complex game logic
+- Consistent code style and patterns across components
+
+This experimental approach demonstrated how AI tools can significantly accelerate the development process while maintaining code quality and architectural consistency. The human developer's role focused on:
+
+- High-level architecture decisions
+- Game design and user experience
+- Code review and quality assurance
+- Performance optimization
+- Feature prioritization
+
+## 📱 Features
+
+- Responsive design that works on both desktop and mobile devices
+- Clean, modern UI with consistent styling across games
+- Progress tracking and statistics for each game
+- Helpful tutorials and "How to Play" guides
+- Keyboard support for all games
+- Dark mode support
+
+## 🤝 Contributing
+
+Contributions are welcome! Feel free to open issues or submit pull requests.
+
+## 📝 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🙏 Acknowledgments
+
+- Inspired by popular word and number puzzles
+- Built with the assistance of AI tools and the open-source community
+- Special thanks to all contributors and testers
