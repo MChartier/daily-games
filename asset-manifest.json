@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/daily-games/static/css/main.e6c13ad2.css",
-    "main.js": "/daily-games/static/js/main.09068335.js",
+    "main.js": "/daily-games/static/js/main.576d0cfb.js",
     "static/js/453.f64f91dc.chunk.js": "/daily-games/static/js/453.f64f91dc.chunk.js",
     "index.html": "/daily-games/index.html",
     "main.e6c13ad2.css.map": "/daily-games/static/css/main.e6c13ad2.css.map",
-    "main.09068335.js.map": "/daily-games/static/js/main.09068335.js.map",
+    "main.576d0cfb.js.map": "/daily-games/static/js/main.576d0cfb.js.map",
     "453.f64f91dc.chunk.js.map": "/daily-games/static/js/453.f64f91dc.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.e6c13ad2.css",
-    "static/js/main.09068335.js"
+    "static/js/main.576d0cfb.js"
   ]
 }
