@@ -42,14 +42,14 @@ export const Header: React.FC = () => {
     const { setShowHelp } = useHelp();
 
     const getCurrentGame = () => {
-        const path = location.pathname.split('/')[2]; // daily-games/[gameId]
+        const path = location.pathname.split('/')[1]; // [gameId]
         return games.find(game => game.id === path);
     };
 
     const currentGame = getCurrentGame();
 
     const handleGameClick = (gameId: string) => {
-        navigate(`${gameId}`);
+        navigate(`/${gameId}`);
         if (isMobile) {
             setDrawerOpen(false);
         }
