@@ -104,12 +104,16 @@ export const Birdle: React.FC = () => {
                     ...prev,
                     guesses: newGuesses,
                     isComplete: true,
-                    hasWon: true,
-                    currentGuess: prev.currentGuess + 1
+                    hasWon: true
                 }));
 
-                // Wait a moment to show the completed board, then navigate to results
+                // Wait longer to show the animation before navigating
                 setTimeout(() => {
+                    setGameState(prev => ({
+                        ...prev,
+                        currentGuess: prev.currentGuess + 1
+                    }));
+                    
                     const timeSpent = Math.floor((Date.now() - gameState.startTime) / 1000);
                     navigate('/results/birdle', {
                         state: {
@@ -121,7 +125,7 @@ export const Birdle: React.FC = () => {
                             board: newGuesses
                         }
                     });
-                }, 1500);
+                }, 2000); // Increased delay to allow animation to complete
                 return;
             }
 
