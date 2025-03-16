@@ -11,3 +11,14 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+html {
+  height: -webkit-fill-available;
+}
+
+/* Ensure proper sizing on iOS */
+@supports (-webkit-touch-callout: none) {
+  .game-container {
+    height: -webkit-fill-available;
+  }
+}

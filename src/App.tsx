@@ -1,7 +1,7 @@
 import React from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import { ThemeProvider } from '@mui/material/styles';
-import { CssBaseline } from '@mui/material';
+import { CssBaseline, Box } from '@mui/material';
 import { theme } from './theme';
 import { AppRoutes } from './AppRoutes';
 import { Header } from './components/Header';
@@ -20,8 +20,32 @@ export const App: React.FC = () => {
       <ThemeProvider theme={theme}>
         <CssBaseline />
         <HelpProvider>
-          <Header />
-          <AppRoutes />
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              height: '100dvh',
+              position: 'fixed',
+              width: '100%',
+              overflow: 'hidden',
+              WebkitOverflowScrolling: 'touch',
+              bgcolor: 'background.default'
+            }}
+          >
+            <Header />
+            <Box
+              component="main"
+              sx={{
+                flex: 1,
+                display: 'flex',
+                flexDirection: 'column',
+                position: 'relative',
+                overflow: 'hidden'
+              }}
+            >
+              <AppRoutes />
+            </Box>
+          </Box>
         </HelpProvider>
       </ThemeProvider>
     </BrowserRouter>

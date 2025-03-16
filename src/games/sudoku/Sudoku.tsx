@@ -274,7 +274,12 @@ export const Sudoku: React.FC = () => {
 
     if (!gameStarted) {
         return (
-            <Box sx={{ height: 'calc(100vh - 57px)' }}>
+            <Box sx={{ 
+                flex: 1,
+                display: 'flex',
+                flexDirection: 'column',
+                overflow: 'hidden'
+            }}>
                 <GameStartScreen
                     title="Sudoku"
                     icon={<Grid3x3 />}
@@ -289,13 +294,13 @@ export const Sudoku: React.FC = () => {
     return (
         <Box 
             sx={{
-                height: 'calc(100vh - 57px)',
+                flex: 1,
                 display: 'flex',
                 flexDirection: 'column',
-                px: 2,
-                py: { xs: 1, sm: 2 },
                 overflow: 'hidden',
                 position: 'relative',
+                px: 2,
+                py: { xs: 1, sm: 2 }
             }}
         >
             {/* How to Play Modal */}
@@ -322,23 +327,6 @@ export const Sudoku: React.FC = () => {
                             opacity: 0.9
                         }
                     }}
-                >
-                    <HelpOutline />
-                </IconButton>
-            )}
-
-            {/* Mobile Help Button in Header */}
-            {isMobile && (
-                <IconButton
-                    edge="end"
-                    sx={{
-                        position: 'fixed',
-                        top: 8,
-                        right: 16,
-                        color: 'white',
-                        zIndex: 1100,
-                    }}
-                    onClick={() => setShowHelp(true)}
                 >
                     <HelpOutline />
                 </IconButton>

@@ -247,7 +247,12 @@ export const Birdle: React.FC = () => {
 
     if (!gameStarted) {
         return (
-            <Box sx={{ height: 'calc(100vh - 57px)' }}>
+            <Box sx={{ 
+                flex: 1,
+                display: 'flex',
+                flexDirection: 'column',
+                overflow: 'hidden'
+            }}>
                 <GameStartScreen
                     title="Birdle"
                     icon={<FlutterDash sx={{ transform: 'scaleX(-1)' }} />}
@@ -261,18 +266,36 @@ export const Birdle: React.FC = () => {
 
     return (
         <Box sx={{ 
-            height: 'calc(100vh - 57px)',
+            flex: 1,
             display: 'flex',
             flexDirection: 'column',
+            overflow: 'hidden',
+            position: 'relative',
             alignItems: 'center',
             gap: 2,
             p: 2
         }}>
-            <Box sx={{ position: 'absolute', top: 8, right: 8 }}>
-                <IconButton onClick={() => setShowHelp(true)} color="primary">
+            {!isMobile && (
+                <IconButton
+                    onClick={() => setShowHelp(true)}
+                    size="large"
+                    sx={{ 
+                        position: 'absolute',
+                        top: 16,
+                        right: 16,
+                        color: 'text.primary',
+                        bgcolor: 'background.paper',
+                        boxShadow: 1,
+                        zIndex: 1,
+                        '&:hover': {
+                            bgcolor: 'background.paper',
+                            opacity: 0.9
+                        }
+                    }}
+                >
                     <HelpOutline />
                 </IconButton>
-            </Box>
+            )}
 
             <Box sx={{ 
                 flex: 1,

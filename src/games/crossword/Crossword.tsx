@@ -520,7 +520,12 @@ export const Crossword: React.FC = () => {
 
     if (!gameStarted) {
         return (
-            <Box sx={{ height: 'calc(100vh - 57px)' }}>
+            <Box sx={{ 
+                flex: 1,
+                display: 'flex',
+                flexDirection: 'column',
+                overflow: 'hidden'
+            }}>
                 <GameStartScreen
                     title="Crossword"
                     icon={<Extension />}
@@ -535,13 +540,13 @@ export const Crossword: React.FC = () => {
     return (
         <Box 
             sx={{
+                flex: 1,
                 display: 'flex',
                 flexDirection: 'column',
-                height: 'calc(100vh - 57px)',
-                px: { xs: 1, sm: 2 },
-                py: { xs: 0.5, sm: 2 },
                 overflow: 'hidden',
                 position: 'relative',
+                px: { xs: 1, sm: 2 },
+                py: { xs: 0.5, sm: 2 }
             }}
         >
             {/* How to Play Modal */}
@@ -568,23 +573,6 @@ export const Crossword: React.FC = () => {
                             opacity: 0.9
                         }
                     }}
-                >
-                    <HelpOutline />
-                </IconButton>
-            )}
-
-            {/* Mobile Help Button in Header */}
-            {isMobile && (
-                <IconButton
-                    edge="end"
-                    sx={{
-                        position: 'fixed',
-                        top: 8,
-                        right: 16,
-                        color: 'white',
-                        zIndex: 1100,
-                    }}
-                    onClick={() => setShowHelp(true)}
                 >
                     <HelpOutline />
                 </IconButton>
@@ -853,25 +841,17 @@ export const Crossword: React.FC = () => {
                 
                 {/* Controls Section - Mobile */}
                 {isMobile && (
-                    <Box sx={{
-                        display: 'flex',
+                    <Box sx={{ 
                         width: '100%',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        px: { xs: 0.5, sm: 2 },
-                        py: { xs: 0.5, sm: 1.5 },
+                        maxWidth: isMobile ? '100%' : '500px',
                         mt: 1,
+                        pb: { xs: 6, sm: 2 }
                     }}>
-                        <Box sx={{ 
-                            width: '100%',
-                            maxWidth: { xs: '100%', sm: '800px' }
-                        }}>
-                            <Keyboard
-                                onKeyPress={handleKeyPress}
-                                letterStates={{}}
-                                variant="crossword"
-                            />
-                        </Box>
+                        <Keyboard
+                            onKeyPress={handleKeyPress}
+                            letterStates={{}}
+                            variant="crossword"
+                        />
                     </Box>
                 )}
 

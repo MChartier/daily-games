@@ -9,32 +9,42 @@ interface SudokuHowToPlayProps {
 
 const ExampleGrid: React.FC = () => {
     return (
-        <Grid container spacing={0.5} sx={{ width: 'fit-content', border: 2, borderColor: 'primary.main', p: 1 }}>
-            {[1, 2, 3].map((row) => (
-                <Grid container item key={row} spacing={0.5} >
-                    {[1, 2, 3].map((col) => (
-                        <Grid item key={col}>
-                            <Box
-                                sx={{
-                                    width: 40,
-                                    height: 40,
-                                    display: 'flex',
-                                    justifyContent: 'center',
-                                    alignItems: 'center',
-                                    border: 1,
-                                    borderColor: 'grey.400',
-                                    backgroundColor: row === 2 && col === 2 ? 'primary.light' : 'background.paper',
-                                }}
-                            >
-                                <Typography variant="body1">
-                                    {row === 2 && col === 2 ? '5' : ''}
-                                </Typography>
-                            </Box>
-                        </Grid>
-                    ))}
-                </Grid>
-            ))}
-        </Grid>
+        <Box 
+            sx={{ 
+                width: 'fit-content',
+                border: 2,
+                borderColor: 'primary.main',
+                p: 2,
+                display: 'grid',
+                gridTemplateColumns: 'repeat(3, 40px)',
+                gap: '4px',
+                margin: '0 auto'
+            }}
+        >
+            {Array.from({ length: 9 }, (_, i) => {
+                const row = Math.floor(i / 3) + 1;
+                const col = (i % 3) + 1;
+                return (
+                    <Box
+                        key={i}
+                        sx={{
+                            width: 40,
+                            height: 40,
+                            display: 'flex',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            border: 1,
+                            borderColor: 'grey.400',
+                            backgroundColor: row === 2 && col === 2 ? 'primary.light' : 'background.paper',
+                        }}
+                    >
+                        <Typography variant="body1">
+                            {row === 2 && col === 2 ? '5' : ''}
+                        </Typography>
+                    </Box>
+                );
+            })}
+        </Box>
     );
 };
 
@@ -80,9 +90,6 @@ export const SudokuHowToPlay: React.FC<SudokuHowToPlayProps> = ({ open, onClose 
                     <List sx={{ listStyleType: 'disc', pl: 2 }}>
                         <ListItem sx={{ display: 'list-item' }}>
                             <ListItemText primary="Pre-filled numbers cannot be changed" />
-                        </ListItem>
-                        <ListItem sx={{ display: 'list-item' }}>
-                            <ListItemText primary="Invalid entries will be highlighted in red" />
                         </ListItem>
                         <ListItem sx={{ display: 'list-item' }}>
                             <ListItemText primary="Use the pencil mode to make notes in cells" />

@@ -3,6 +3,7 @@ import {
     Extension,
     FlutterDash,
     Grid3x3,
+    HelpOutline,
     Menu as MenuIcon,
     Psychology
 } from '@mui/icons-material';
@@ -42,11 +43,12 @@ export const Header: React.FC = () => {
     const { setShowHelp } = useHelp();
 
     const getCurrentGame = () => {
-        const path = location.pathname.split('/')[1]; // [gameId]
+        const path = location.pathname.split('/')[1];
         return games.find(game => game.id === path);
     };
 
     const currentGame = getCurrentGame();
+    const isGamePage = !!currentGame;
 
     const handleGameClick = (gameId: string) => {
         navigate(`/${gameId}`);
@@ -152,92 +154,62 @@ export const Header: React.FC = () => {
     );
 
     return (
-        <>
-            <AppBar 
-                position="sticky" 
-                elevation={0}
-                sx={{ 
-                    backgroundColor: theme.palette.primary.main,
-                    borderBottom: 1,
-                    borderColor: 'divider',
-                    borderRadius: 0,
-                }}
-            >
-                <Toolbar sx={{ gap: 2 }}>
-                    {isMobile ? (
-                        <>
+        <AppBar 
+            position="static"
+            sx={{ borderRadius: 0 }}
+        >
+            <Toolbar sx={{ justifyContent: 'space-between' }}>
+                {isMobile ? (
+                    <>
+                        <IconButton
+                            edge="start"
+                            color="inherit"
+                            onClick={() => setDrawerOpen(true)}
+                        >
+                            <MenuIcon />
+                        </IconButton>
+                        <Typography variant="h6" component="div" sx={{ flexGrow: 1, textAlign: 'center' }}>
+                            {currentGame?.name || 'Daily Games'}
+                        </Typography>
+                        {isGamePage && (
                             <IconButton
-                                edge="start"
-                                sx={{ color: 'white' }}
-                                aria-label="menu"
-                                onClick={() => setDrawerOpen(!drawerOpen)}
+                                edge="end"
+                                color="inherit"
+                                onClick={() => setShowHelp(true)}
                             >
-                                <MenuIcon />
+                                <HelpOutline />
                             </IconButton>
-
-                            <Box 
-                                sx={{ 
-                                    display: 'flex', 
-                                    alignItems: 'center',
-                                    gap: 1,
-                                    color: 'white',
-                                    cursor: currentGame ? 'default' : 'pointer',
-                                    flex: 1,
-                                }}
-                                onClick={() => !currentGame && navigate('/')}
-                            >
-                                {currentGame ? currentGame.icon : <Psychology />}
-                                <Typography 
-                                    variant="h6" 
-                                    sx={{ fontWeight: 600 }}
-                                >
-                                    {currentGame?.name || 'Daily Games'}
-                                </Typography>
-                            </Box>
-                        </>
-                    ) : (
-                        <>
-                            <Box 
-                                sx={{ 
-                                    display: 'flex', 
-                                    alignItems: 'center',
-                                    gap: 1,
-                                    color: 'white',
-                                    cursor: 'pointer'
-                                }}
+                        )}
+                    </>
+                ) : (
+                    <>
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                            <Typography
+                                variant="h6"
+                                component="div"
                                 onClick={() => navigate('/')}
+                                sx={{
+                                    cursor: 'pointer',
+                                    '&:hover': { opacity: 0.8 }
+                                }}
                             >
-                                <Psychology />
-                                <Typography 
-                                    variant="h6" 
-                                    sx={{ fontWeight: 600 }}
-                                >
-                                    Daily Games
-                                </Typography>
-                            </Box>
-
-                            <Box sx={{ flex: 1, display: 'flex', gap: 1 }}>
+                                Daily Games
+                            </Typography>
+                            <Box sx={{ display: 'flex', gap: 1 }}>
                                 {renderGameButtons()}
                             </Box>
-                        </>
-                    )}
-                </Toolbar>
-            </AppBar>
+                        </Box>
+                    </>
+                )}
+            </Toolbar>
 
             <Drawer
                 anchor="left"
                 open={drawerOpen}
                 onClose={() => setDrawerOpen(false)}
-                variant="temporary"
-                PaperProps={{
-                    sx: {
-                        width: 250,
-                        borderRadius: 0,
-                    }
-                }}
             >
                 {renderDrawerContent()}
             </Drawer>
-        </>
+        </AppBar>
     );
 }; 
