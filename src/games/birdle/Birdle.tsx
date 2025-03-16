@@ -273,7 +273,7 @@ export const Birdle: React.FC = () => {
             flex: 1,
             display: 'flex',
             flexDirection: 'column',
-            overflow: 'hidden',
+            overflow: 'visible',
             position: 'relative',
             alignItems: 'center',
             gap: 2,
@@ -290,7 +290,7 @@ export const Birdle: React.FC = () => {
                         color: 'text.primary',
                         bgcolor: 'background.paper',
                         boxShadow: 1,
-                        zIndex: 1,
+                        zIndex: 10,
                         '&:hover': {
                             bgcolor: 'background.paper',
                             opacity: 0.9
@@ -307,7 +307,9 @@ export const Birdle: React.FC = () => {
                 maxWidth: isMobile ? '100%' : '400px',
                 display: 'flex',
                 flexDirection: 'column',
-                justifyContent: 'center'
+                justifyContent: 'center',
+                position: 'relative',
+                zIndex: 1
             }}>
                 <GameBoard 
                     guesses={gameState.guesses} 
